@@ -1,0 +1,34 @@
+@@INCLUDE@@ babel.thtml
+@@--
+<?xml version="1.0" encoding="utf-8"?>
+@@IF@@ @_LOGIN_@ = ""
+@@-- Login failed
+<response>
+   <replace id="status_bar">Erreur ! Impossible de se connecter</replace>
+   <apply_style id="status_bar">
+     <attribute id="display" value="block"/>
+   </apply_style>
+   <apply_style id="forum_post">
+     <attribute id="display" value="none"/>
+   </apply_style>
+   <apply_style id="new_comment">
+     <attribute id="display" value="none"/>
+   </apply_style>
+</response>
+@@ELSE@@
+@@-- Login OK
+<response>
+   <apply_style id="status_bar">
+     <attribute id="display" value="none"/>
+   </apply_style>
+   <apply_style id="forum_post">
+     <attribute id="display" value="block"/>
+   </apply_style>
+   <replace id="login"><![CDATA[@_LAZY_LOGIN_@]]></replace>
+   <replace id="top_links"><![CDATA[@_LAZY_QUICK_LOGIN_@]]></replace>
+   <replace id="comment_login">@_LOGIN_@</replace>
+   <apply_style id="new_comment">
+     <attribute id="display" value="block"/>
+   </apply_style>
+</response>
+@@END_IF@@

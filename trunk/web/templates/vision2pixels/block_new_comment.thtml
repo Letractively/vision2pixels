@@ -1,0 +1,38 @@
+@@INCLUDE@@ babel.thtml
+<form enctype="multipart/form-data" id="comment_form" action="#" method="post">
+  <fieldset>
+    <legend>@_BABEL_NEW_COMMENT_@</legend>
+    @@-- Is user logged
+    <div id="comment_login"><p>
+        @@IF@@ @_LOGIN_@ = ""
+        <label for="anonymous_user">@_BABEL_YOUR_NAME_@</label>
+        <input name="ANONYMOUS_USER" id="anonymous_user" type="text"/>
+        @@END_IF@@
+    </p></div>
+    @@-- Is user in a specific forum
+    <p>
+      <input name="FORUM" id="sel_forum_list"
+             type="hidden" value="@_Current_FID_@"/>
+      <input name="CATEGORY" id="sel_category"
+             type="hidden" value="@_Category_Id_@"/>
+      <input name="TID" id="TID" type="hidden" value="@_Current_TID_@" />
+      <input name="FID" id="FID" type="hidden" value="@_Current_FID_@" />
+    </p>
+    <!-- <p id="title_name_input">
+           <input name="NAME" id="title_input" type="entry" value="@_NAME_@"/>
+         </p> -->
+    <p>
+      <label for="comment_input">@_BABEL_ENTER_COMMENT_@</label>
+      <textarea name="COMMENT" rows="3" cols="40"
+                id="comment_input"></textarea>
+    </p>
+    <p>
+      <input name="ENTER" id="comment_form_enter" type="submit" value="OK"/>
+    </p>
+    <p id="new_comment_error"></p>
+    @@--    <p><input name="FILENAME" type="file"/>
+  </fieldset>
+</form>
+@@--
+@@INCLUDE@@ ../../we_js/aws_action_xml.tjs (onchange, sel_forum_list, 4=>sel_forum_list)
+@@INCLUDE@@ ../../we_js/aws_action_xml.tjs (onsubmit, comment_form, 4=>comment_form, 5=>PARENT_ID)
