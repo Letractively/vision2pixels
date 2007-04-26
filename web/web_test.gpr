@@ -1,0 +1,64 @@
+------------------------------------------------------------------------------
+--                              Vision2Pixels                               --
+--                                                                          --
+--                         Copyright (C) 2006-2007                          --
+--                      Pascal Obry - Olivier Ramonat                       --
+--                                                                          --
+--  This library is free software; you can redistribute it and/or modify    --
+--  it under the terms of the GNU General Public License as published by    --
+--  the Free Software Foundation; either version 2 of the License, or (at   --
+--  your option) any later version.                                         --
+--                                                                          --
+--  This library is distributed in the hope that it will be useful, but     --
+--  WITHOUT ANY WARRANTY; without even the implied warranty of              --
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU       --
+--  General Public License for more details.                                --
+--                                                                          --
+--  You should have received a copy of the GNU General Public License       --
+--  along with this library; if not, write to the Free Software Foundation, --
+--  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
+------------------------------------------------------------------------------
+
+with "aunit";
+
+with "../shared";
+with "../image/image_test";
+with "../db/db_test";
+with "web";
+
+project Web_Test is
+
+   for Languages use ("Ada");
+
+   for Source_Dirs use ("test/src");
+   for Object_Dir use "test/obj";
+   for Exec_Dir use "test/bin";
+   for Main use ("web_harness");
+
+   -------------
+   -- Builder --
+   -------------
+
+   package Builder renames Shared.Builder;
+
+   --------------
+   -- Compiler --
+   --------------
+
+   package Compiler is
+      for Default_Switches ("Ada") use ("-gnat05") & Shared.Debug_Options;
+   end Compiler;
+
+   ------------
+   -- Binder --
+   ------------
+
+   package Binder renames Shared.Binder;
+
+   ------------
+   -- Linker --
+   ------------
+
+   package Linker renames Shared.Linker;
+
+end Web_Test;

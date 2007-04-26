@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<response>
+  <replace id="metadata_edition">
+    <![CDATA[
+    <form action="#" id="metadata_edition_form">
+      <p>
+        <input type="text" size="60" name="address" id="address"
+        value="11, avenue du Père Lachaise, Paris, France" />
+	<a href="#" id="metadata_edition_form_go" onclick="return false;">Go!</a>
+      </p>
+      <a href="#" onclick="return false;" id="centermarker">Center marker</a>
+      <p id="gmap_error"></p>
+      <div id="map" style="width: 500px; height: 300px"></div>
+      <div id="message"></div>
+      <div id="message2"></div>
+    </form>
+    ]]>
+  </replace>
+</response>
