@@ -29,7 +29,7 @@ package Defaults is
 
    DB                       : Settings.DB_Kind := Settings.SQLite3;
 
-   DB_Name                  : constant String := "v2p";
+   DB_Name                  : constant String := "v2p.db";
 
    Images_Path              : constant String := "images";
 
