@@ -34,5 +34,5 @@
   </fieldset>
 </form>
 @@--
-@@INCLUDE@@ ../../we_js/aws_action_xml.tjs (onchange, sel_forum_list, 4=>sel_forum_list)
-@@INCLUDE@@ ../../we_js/aws_action_xml.tjs (onsubmit, comment_form, 4=>comment_form, 5=>PARENT_ID)
+@@INCLUDE@@ ../we_js/aws_action_xml.tjs (onchange, sel_forum_list, 4=>sel_forum_list)
+@@INCLUDE@@ ../we_js/aws_action_xml.tjs (onsubmit, comment_form, 4=>comment_form, 5=>PARENT_ID)

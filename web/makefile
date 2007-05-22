@@ -28,17 +28,17 @@ INSTALL_TESTS := $(PWD)/web/v2p-testdir
 LOGFILE := $(INSTALL_TESTS)/web_harness.log.${shell date +%Y%m%d-%H%M%S}
 
 all:
-	chmod a+w lib_ali/*
+	-chmod a+w lib_ali/*
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
 
 setup:
 	-$(MKDIR) gen
-	templates2ada -d templates/vision2pixels -o gen/templates.cds \
+	templates2ada -d templates/ -o gen/templates.cds \
 		-t templates/templates.tads
 	gnat chop -wpq gen/templates.cds tsrc/
 	$(RM) gen/templates.cds
-	templates2ada -d templates/vision2pixels -o gen/templates.cds -e .txml \
+	templates2ada -d templates/ -o gen/templates.cds -e .txml \
 		-t templates/templates.tads
 	gnat chop -wpq gen/templates.cds gen/
 	$(RM) gen/templates.cds
