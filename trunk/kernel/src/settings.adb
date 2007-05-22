@@ -30,7 +30,7 @@ package body Settings is
    use Ada;
    use Ada.Exceptions;
 
-   Config_Filename : constant String := "v2p.ini";
+   Config_Filename : constant String := "plugins/vision2pixels/v2p.ini";
 
    type Attributes is
      (DB, DB_Name, Images_Path, Thumbs_Path,
