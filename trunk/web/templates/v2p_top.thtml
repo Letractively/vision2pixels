@@ -11,7 +11,7 @@
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
   <title>@_$1_@</title>
   @@INCLUDE@@ import_css.thtml
-  @@INCLUDE@@ ../../we_js/aws.tjs
+  @@INCLUDE@@ ../we_js/aws.tjs
   @@IF@@ @_$2_@ = "forum_post_page"
   @@--  This google key works only for http://localhost:8080
      <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAbXnh4fBA_Kpf2wc2hparDhTwM0brOpm-All5BF6PoaKBxRWWERRHyTAsPEdNO7iQYYi_d1dpblL7jw"
