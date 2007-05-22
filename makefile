@@ -25,6 +25,8 @@
 
 INSTALL=$(HOME)/opt/v2p
 INSTALL_GWIAD_PLUGIN=/opt/gwiad
+GWIAD_UNREGISTER_SCRIPT = /opt/gwiad/scripts/unregister
+GWIAD_HOST=127.0.0.1:8080
 MODE=Debug
 
 ifeq ($(OS),Windows_NT)
@@ -81,10 +83,16 @@ runtests: init_tests $(MODULES_RUNTESTS) check_tests
 install: $(MODULES_INSTALL)
 
 install_gwiad_plugin:
-	cp -r web/templates/vision2pixels $(INSTALL_GWIAD_PLUGIN)/templates/
-	cp -r web/xml $(INSTALL_GWIAD_PLUGIN)/
-	cp -r web/we_js $(INSTALL_GWIAD_PLUGIN)/
-	cp web/lib/*.so $(INSTALL_GWIAD_PLUGIN)/
+	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website /opt/gwiad/lib/libvision2pixel.so
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css
+	cp -r web/templates/*.thtml $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+	cp -r web/xml/*xml $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml/
+	cp -r web/we_js/*js $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js/
+	cp -r web/css/*css $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/
+	cp web/lib/*.so $(INSTALL_GWIAD_PLUGIN)/lib/
 
 clean: $(MODULES_CLEAN)
 

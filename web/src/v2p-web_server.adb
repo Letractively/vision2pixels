@@ -31,9 +31,9 @@ with AWS.Session;
 with AWS.Status;
 with AWS.Templates;
 
---  with Gwiad.Services.Register;
-with Gwiad.Websites.Register;
 with Gwiad.Web.Register.Virtual_Host;
+with Gwiad.Websites.Register;
+with Gwiad.OS;
 
 with V2P.Database;
 with V2P.Context;
@@ -65,16 +65,17 @@ with V2P.Wiki;
 with Image.Data;
 with Image.Metadata.Geographic;
 with Settings;
-with OS;
 use AWS.Services.ECWF.Registry;
 
 package body V2P.Web_Server is
 
    use AWS;
+   use Ada;
 
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
 
-   XML_Path         : constant String := "xml";
+   XML_Path         : constant String :=
+                        Directories.Compose (Gwiad_Plugin_Path, "xml");
    XML_Prefix_URI   : constant String := "/xml_";
    CSS_URI          : constant String := "/css";
    Web_JS_URI       : constant String := "/we_js";
@@ -181,7 +182,7 @@ package body V2P.Web_Server is
    --  Gwiad  --
    -------------
 
-   procedure Unregister;
+   procedure Unregister (Name : in String);
    --  Unregister website
 
    --------------------------
@@ -221,7 +222,9 @@ package body V2P.Web_Server is
    function CSS_Callback (Request : in Status.Data) return Response.Data is
       SID          : constant Session.Id := Status.Session (Request);
       URI          : constant String := Status.URI (Request);
-      File         : constant String := URI (URI'First + 1 .. URI'Last);
+      File         : constant String :=
+                      Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator
+                         & URI (URI'First + 1 .. URI'Last);
       Translations : Templates.Translate_Set;
    begin
       Templates.Insert
@@ -851,7 +854,8 @@ package body V2P.Web_Server is
    function Photos_Callback (Request : in Status.Data) return Response.Data is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
-               Settings.Get_Images_Path & OS.Directory_Separator
+               Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
+               Settings.Get_Images_Path & Gwiad.OS.Directory_Separator
                  & URI (URI'First +
                           Images_Source_Prefix'Length + 1 .. URI'Last);
    begin
@@ -984,21 +988,22 @@ package body V2P.Web_Server is
    function Thumbs_Callback (Request : in Status.Data) return Response.Data is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
-               Settings.Get_Thumbs_Path & OS.Directory_Separator
+               Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
+               Settings.Get_Thumbs_Path & Gwiad.OS.Directory_Separator
                  & URI (URI'First +
                           Thumbs_Source_Prefix'Length + 1 .. URI'Last);
    begin
       return Response.File (MIME.Content_Type (File), File);
    end Thumbs_Callback;
 
-      ----------------
+   ----------------
    -- Unregister --
    ----------------
 
-   procedure Unregister is
-      use Gwiad.Web.Register.Virtual_Host;
+   procedure Unregister (Name : in String) is
+      pragma Unreferenced (Name);
    begin
-      Unregister ("localhost");
+      Gwiad.Web.Register.Virtual_Host.Unregister ("localhost");
    end Unregister;
 
    -------------------
@@ -1007,7 +1012,8 @@ package body V2P.Web_Server is
 
    function WEJS_Callback (Request : in Status.Data) return Response.Data is
       URI          : constant String := Status.URI (Request);
-      File         : constant String := URI (URI'First + 1 .. URI'Last);
+      File         : constant String := Gwiad_Plugin_Path
+        & Gwiad.OS.Directory_Separator & URI (URI'First + 1 .. URI'Last);
       Translations : Templates.Translate_Set;
    begin
       return Response.Build

@@ -27,7 +27,7 @@ with Ada.Text_IO;
 
 with DB;
 with Image.Metadata.Embedded;
-with OS;
+with Gwiad.OS;
 with Settings;
 
 with V2P.Web_Server;
@@ -102,7 +102,8 @@ package body V2P.Database is
    begin
       if not DBH.Connected then
          DBH.Handle := new DB.Handle'Class'(DB_Handle.Get);
-         DBH.Handle.Connect (Settings.Get_DB_Name);
+         DBH.Handle.Connect (Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
+                             Settings.Get_DB_Name);
          DBH.Connected := True;
          DBH_TLS.Set_Value (DBH);
       end if;
@@ -172,7 +173,7 @@ package body V2P.Database is
 
       DBH.Handle.Prepare_Select
         (Iter, "select id, name from category"
-           & " where post.category_id=category.id post.id=" & Q (Tid));
+         & " where post.category_id=category.id post.id=" & Q (Tid));
 
       if Iter.More then
          Iter.Get_Line (Line);
@@ -207,7 +208,7 @@ package body V2P.Database is
 
       DBH.Handle.Prepare_Select
         (Iter, "select f.name, c.name from category c, "
-           & "forum f where f.id = c.forum_id and c.id = " & Q (CID));
+         & "forum f where f.id = c.forum_id and c.id = " & Q (CID));
 
       if Iter.More then
          Iter.Get_Line (Line);
@@ -464,7 +465,7 @@ package body V2P.Database is
             Iter.Get_Line (Line);
 
             Exif := Image.Metadata.Embedded.Get
-              (Settings.Get_Images_Path & OS.Directory_Separator
+              (Settings.Get_Images_Path & Gwiad.OS.Directory_Separator
                & DB.String_Vectors.Element (Line, 1));
          end if;
 
