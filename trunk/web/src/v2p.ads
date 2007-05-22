@@ -19,6 +19,11 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with Ada.Directories;
+
 package V2P is
-   pragma Pure;
+
+   Gwiad_Plugin_Path : constant String :=
+                         Ada.Directories.Compose ("plugins", "vision2pixels");
+
 end V2P;
