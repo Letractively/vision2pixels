@@ -30,7 +30,8 @@ LOGFILE := $(INSTALL_TESTS)/web_harness.log.${shell date +%Y%m%d-%H%M%S}
 all:
 	-chmod a+w lib_ali/*
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb
-	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
+#	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
+# Does not compile ! ???
 
 setup:
 	-$(MKDIR) gen

@@ -55,4 +55,6 @@ package Defaults is
 
    Descending_Order         : constant Boolean := True;
 
+   Wiki_Service_Name        : constant String  := "wiki_service";
+
 end Defaults;

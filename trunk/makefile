@@ -89,6 +89,7 @@ install_gwiad_plugin:
 	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js
 	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css
 	cp -r web/templates/*.thtml $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+	cp -r web/templates/*.txml $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
 	cp -r web/xml/*xml $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml/
 	cp -r web/we_js/*js $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js/
 	cp -r web/css/*css $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/

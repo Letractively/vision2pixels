@@ -40,6 +40,7 @@ with V2P.Context;
 with V2P.Template_Defs.Forum_Entry;
 with V2P.Template_Defs.Forum_Threads;
 with V2P.Template_Defs.Forum_Post;
+with V2P.Template_Defs.User_Page;
 with V2P.Template_Defs.Main_Page;
 with V2P.Template_Defs.Error;
 with V2P.Template_Defs.Global;
@@ -53,6 +54,8 @@ with V2P.Template_Defs.Block_Forum_Navigate;
 with V2P.Template_Defs.Block_User_Tmp_Photo_Select;
 with V2P.Template_Defs.Block_Forum_Filter;
 with V2P.Template_Defs.Block_Forum_List_Select;
+with V2P.Template_Defs.Block_User_Page;
+with V2P.Template_Defs.R_Block_User_Page_Edit_Form_Enter;
 with V2P.Template_Defs.R_Block_Login;
 with V2P.Template_Defs.R_Block_Logout;
 with V2P.Template_Defs.R_Block_Forum_List;
@@ -161,6 +164,12 @@ package body V2P.Web_Server is
       Context      : access Services.ECWF.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when submitting a new post
+
+   procedure Onsubmit_User_Page_Edit_Form_Enter_Callback
+     (Request      : in     Status.Data;
+      Context      : access Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+   --  Called when submitting new user page content
 
    procedure New_Photo_Callback
      (Request      : in     Status.Data;
@@ -847,6 +856,32 @@ package body V2P.Web_Server is
       end if;
    end Onsubmit_Post_Form_Enter_Callback;
 
+   -------------------------------------------------
+   -- Onsubmit_User_Page_Edit_Form_Enter_Callback --
+   -------------------------------------------------
+
+   procedure Onsubmit_User_Page_Edit_Form_Enter_Callback
+     (Request      : in     Status.Data;
+      Context      : access Services.ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set)
+   is
+      pragma Unreferenced (Context);
+      use Template_Defs;
+
+--      SID          : constant Session.Id := Status.Session (Request);
+      P            : constant Parameters.List := Status.Parameters (Request);
+--        Login        : constant String :=
+--                         Session.Get (SID, Template_Defs.Global.LOGIN);
+      Content      : constant String :=
+                       Parameters.Get (P, Block_User_Page.HTTP.CONTENT);
+   begin
+      Templates.Insert
+        (Translations,
+         Templates.Assoc
+           (R_Block_User_Page_Edit_Form_Enter.USER_PAGE_HTML_CONTENT,
+            V2P.Wiki.Wiki_To_HTML (Content)));
+   end Onsubmit_User_Page_Edit_Form_Enter_Callback;
+
    ---------------------
    -- Photos_Callback --
    ---------------------
@@ -900,6 +935,12 @@ package body V2P.Web_Server is
       --  Register ECWF pages
 
       Services.ECWF.Registry.Register
+        (Key          => Template_Defs.User_Page.URL,
+         Template     => Template_Defs.User_Page.Template,
+         Data_CB      => null,
+         Prefix       => True);
+
+      Services.ECWF.Registry.Register
         (Template_Defs.Block_Login.Ajax.onclick_login_form_enter,
          Template_Defs.R_Block_Login.Template,
          Login_Callback'Access,
@@ -939,6 +980,12 @@ package body V2P.Web_Server is
         (Template_Defs.Block_Metadata.Ajax.onsubmit_metadata_post,
          Template_Defs.R_Block_Metadata_Form_Enter.Template,
          Onsubmit_Metadata_Form_Enter_Callback'Access,
+         MIME.Text_XML);
+
+      Services.ECWF.Registry.Register
+        (Template_Defs.Block_User_Page.Ajax.onsubmit_user_page_edit_form,
+         Template_Defs.R_Block_User_Page_Edit_Form_Enter.Template,
+         Onsubmit_User_Page_Edit_Form_Enter_Callback'Access,
          MIME.Text_XML);
 
       Services.ECWF.Registry.Register
