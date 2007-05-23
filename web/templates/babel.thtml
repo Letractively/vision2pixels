@@ -39,6 +39,10 @@
 @@SET@@ BABEL_METADATA="Metadonnées"
 @@SET@@ BABEL_EDIT_METADATA="éditer les metadonnées"
 @@SET@@ BABEL_ERROR_METADATA="Métadonnées incorrectes"
+@@--  User page
+@@SET@@ BABEL_USER_EDIT_YOUR_PAGE="Éditer votre page"
+@@SET@@ BABEL_USER_PAGE="Page utilisateur"
+@@SET@@ BABEL_USER_PAGE_OF="Page d'"
 @@--
 @@SET@@ BABEL_GEO_LATITUDE="Latitude"
 @@SET@@ BABEL_GEO_LONGITUDE="Longitude"

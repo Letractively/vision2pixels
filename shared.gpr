@@ -65,6 +65,15 @@ project Shared is
       end case;
    end Compiler;
 
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide is
+      for Vcs_Kind use "SVK";
+   end Ide;
+
+
    ------------
    -- Binder --
    ------------

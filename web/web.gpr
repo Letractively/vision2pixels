@@ -26,6 +26,8 @@ with "gwiad-websites";
 with "gwiad-web";
 with "gwiad-ecwf";
 
+with "wiki_interface";
+
 with "../shared";
 with "../db/db";
 with "../image/image";

@@ -26,7 +26,7 @@
 LOGFILE := ${shell pwd}/test/db_harness.log.${shell date +%Y%m%d-%H%M%S}
 
 all:
-	gnat make -XPRJ_BUILD=$(MODE) -Pdb_test
+#	gnat make -XPRJ_BUILD=$(MODE) -Pdb_test
 
 setup install:
 

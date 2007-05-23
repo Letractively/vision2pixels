@@ -66,4 +66,7 @@ package Settings is
    function Descending_Order return Boolean;
    --  Returns true is the threads view must be sorted in descending order
 
+   function Wiki_Service_Name return String;
+   --  Gwiad wiki service plugin name
+
 end Settings;
