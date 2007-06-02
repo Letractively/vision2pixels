@@ -37,7 +37,7 @@ package body Settings is
       Anonymous_Visit_Counter, Anonymous_Comment, Descending_Order,
       Ignore_Author_Click, Limit_Image_Size, Image_Maximum_Width,
       Image_Maximum_Height, Image_Maximum_Size, Thumbnail_Maximum_Width,
-      Thumbnail_Maximum_Height, Wiki_Service_Name);
+      Thumbnail_Maximum_Height, Virtual_Host, Wiki_Service_Name);
 
    package Conf is new Config (Attributes);
 
@@ -169,6 +169,15 @@ package body Settings is
       return Conf.Get_Value (Thumbnail_Maximum_Width);
    end Thumbnail_Maximum_Width;
 
+   ------------------
+   -- Virtual_Host --
+   ------------------
+
+   function Virtual_Host return String is
+   begin
+      return Conf.Get_Value (Virtual_Host);
+   end Virtual_Host;
+
    -----------------------
    -- Wiki_Service_Name --
    -----------------------
@@ -196,6 +205,7 @@ begin
    Conf.Set_Value (Thumbnail_Maximum_Width, Defaults.Thumbnail_Maximum_Width);
    Conf.Set_Value (Thumbnail_Maximum_Height,
                    Defaults.Thumbnail_Maximum_Height);
+   Conf.Set_Value (Virtual_Host, Defaults.Virtual_Host);
    Conf.Set_Value (Wiki_Service_Name, Defaults.Wiki_Service_Name);
 
    --  Now read the config file if any
