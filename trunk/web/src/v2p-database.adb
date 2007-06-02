@@ -40,6 +40,7 @@ with V2P.Template_Defs.Block_Forum_Navigate;
 with V2P.Template_Defs.Block_Forum_List;
 with V2P.Template_Defs.Block_Login;
 with V2P.Template_Defs.Block_Metadata;
+with V2P.Template_Defs.Block_User_Page;
 with V2P.Template_Defs.Block_New_Comment;
 with V2P.Template_Defs.Block_User_Tmp_Photo_Select;
 with V2P.Template_Defs.R_Block_Forum_List;
@@ -819,6 +820,46 @@ package body V2P.Database is
       return Set;
    end Get_User;
 
+   -------------------
+   -- Get_User_Page --
+   -------------------
+
+   function Get_User_Page (Uid : in String) return Templates.Translate_Set is
+      SQL          : constant String :=
+                       "select content, content_html from user_page "
+                         & "where user_login=" & Q (Uid);
+      DBH          : TLS_DBH := DBH_TLS.Value;
+      Set          : Templates.Translate_Set;
+      Iter         : DB.Iterator'Class := DB_Handle.Get_Iterator;
+      Line         : DB.String_Vectors.Vector;
+      Content      : Templates.Tag;
+      Content_HTML : Templates.Tag;
+
+      use type Templates.Tag;
+
+   begin
+      Connect (DBH);
+      DBH.Handle.Prepare_Select (Iter, SQL);
+
+      while Iter.More loop
+         Iter.Get_Line (Line);
+         Content      := Content & DB.String_Vectors.Element (Line, 1);
+         Content_HTML := Content_HTML & DB.String_Vectors.Element (Line, 2);
+
+         Line.Clear;
+      end loop;
+
+      Iter.End_Select;
+
+      Templates.Insert
+        (Set, Templates.Assoc (Block_User_Page.USER_PAGE_CONTENT, Content));
+      Templates.Insert
+        (Set, Templates.Assoc
+           (Block_User_Page.USER_PAGE_HTML_CONTENT, Content_HTML));
+
+      return Set;
+   end Get_User_Page;
+
    ------------------------
    -- Get_User_Tmp_Photo --
    ------------------------
@@ -1286,5 +1327,21 @@ package body V2P.Database is
 
       return Select_Stmt;
    end Threads_Ordered_Select;
+
+   -----------------
+   -- Update_Page --
+   -----------------
+
+   procedure Update_Page
+     (Uid : in String; Content : in String; Content_HTML : in String)
+   is
+      DBH : TLS_DBH := DBH_TLS.Value;
+      SQL : constant String :=
+              "update user_page set content_html =  " & Q (Content_HTML)
+              & ", content=" & Q (Content) & " where user_login=" & Q (Uid);
+   begin
+      Connect (DBH);
+      DBH.Handle.Execute (SQL);
+   end Update_Page;
 
 end V2P.Database;

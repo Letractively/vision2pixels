@@ -868,18 +868,24 @@ package body V2P.Web_Server is
       pragma Unreferenced (Context);
       use Template_Defs;
 
---      SID          : constant Session.Id := Status.Session (Request);
+      SID          : constant Session.Id := Status.Session (Request);
       P            : constant Parameters.List := Status.Parameters (Request);
---        Login        : constant String :=
---                         Session.Get (SID, Template_Defs.Global.LOGIN);
+      Login        : constant String :=
+                       Session.Get (SID, Template_Defs.Global.LOGIN);
       Content      : constant String :=
                        Parameters.Get (P, Block_User_Page.HTTP.CONTENT);
+      Content_HTML : constant String := V2P.Wiki.Wiki_To_HTML (Content);
    begin
+
+      Database.Update_Page (Uid          => Login,
+                            Content      => Content,
+                            Content_HTML => Content_HTML);
+
       Templates.Insert
         (Translations,
          Templates.Assoc
            (R_Block_User_Page_Edit_Form_Enter.USER_PAGE_HTML_CONTENT,
-            V2P.Wiki.Wiki_To_HTML (Content)));
+            Content_HTML));
    end Onsubmit_User_Page_Edit_Form_Enter_Callback;
 
    ---------------------
