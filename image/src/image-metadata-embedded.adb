@@ -25,7 +25,7 @@
 with GNAT.Expect;
 with GNAT.Regpat;
 
-with OS;
+with Gwiad.OS;
 
 package body Image.Metadata.Embedded is
 
@@ -98,7 +98,7 @@ package body Image.Metadata.Embedded is
 
    begin
       begin
-         if OS.Is_Windows then
+         if Gwiad.OS.Is_Windows then
             Expect.Non_Blocking_Spawn
               (Pd, Cmd,
                (1 => Cmd_Option'Access,
