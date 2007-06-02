@@ -1050,7 +1050,7 @@ package body V2P.Web_Server is
    procedure Unregister (Name : in String) is
       pragma Unreferenced (Name);
    begin
-      Gwiad.Web.Register.Virtual_Host.Unregister ("localhost");
+      Gwiad.Web.Register.Virtual_Host.Unregister (Settings.Virtual_Host);
    end Unregister;
 
    -------------------
@@ -1070,7 +1070,7 @@ package body V2P.Web_Server is
 
 begin
    Start;
-   Gwiad.Web.Register.Virtual_Host.Register (Hostname => "localhost",
+   Gwiad.Web.Register.Virtual_Host.Register (Hostname => Settings.Virtual_Host,
                                              Action  => Main_Dispatcher);
    Gwiad.Websites.Register.Register
      (Name        => "vision2pixel",
