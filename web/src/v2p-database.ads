@@ -129,4 +129,11 @@ package V2P.Database is
    function Is_Author (Uid, Pid : in String) return Boolean;
    --  Returns true whether the user of the post Pid is Uid
 
+   function Get_User_Page (Uid : in String) return Templates.Translate_Set;
+   --  Returns user page
+
+   procedure Update_Page
+     (Uid : in String; Content : in String; Content_HTML : in String);
+   --  Update a user page
+
 end V2P.Database;

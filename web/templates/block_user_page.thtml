@@ -6,7 +6,7 @@
 @@ELSE@@
 <h1>@_BABEL_USER_PAGE_OF_@ @_USER_NAME_@</h1>
 
-<div id="user_page_content"></div>
+<div id="user_page_content">@_USER_PAGE_HTML_CONTENT_@</div>
 
 @@IF@@ @_LOGIN_@ = @_USER_NAME_@
 <form enctype="multipart/form-data"
@@ -15,7 +15,7 @@
     <legend>@_BABEL_USER_EDIT_YOUR_PAGE_@</legend>
     <p>
       <textarea name="CONTENT" rows="3" cols="40"
-                id="content_input"></textarea>
+                id="content_input">@_USER_PAGE_CONTENT_@</textarea>
     </p>
     <p>
       <input name="ENTER" id="user_page_edit_form_enter" type="submit" value="OK"/>
