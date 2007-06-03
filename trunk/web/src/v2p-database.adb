@@ -30,7 +30,6 @@ with Image.Metadata.Embedded;
 with Gwiad.OS;
 with Settings;
 
-with V2P.Web_Server;
 with V2P.DB_Handle;
 with V2P.Template_Defs.Forum_Entry;
 with V2P.Template_Defs.Comment;
@@ -334,7 +333,7 @@ package body V2P.Database is
          Templates.Insert
            (Set, Templates.Assoc
               (Forum_Entry.IMAGE_SOURCE_PREFIX,
-               V2P.Web_Server.Images_Source_Prefix));
+               Settings.Images_Source_Prefix));
 
          --  Insert the image path
 

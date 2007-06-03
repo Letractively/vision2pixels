@@ -35,6 +35,10 @@ package Defaults is
 
    Thumbs_Path              : constant String := "thumbs";
 
+   Images_Source_Prefix     : constant String := "/photos";
+
+   Thumbs_Source_Prefix     : constant String := "/thumbs";
+
    Anonymous_Visit_Counter  : constant Boolean := False;
 
    Anonymous_Comment        : constant Boolean := True;

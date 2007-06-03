@@ -36,6 +36,12 @@ package Settings is
    function Get_Thumbs_Path return String;
    --  Returns the path to the thumbnails
 
+   function Images_Source_Prefix return String;
+   --  Source prefix used to reference images in URL
+
+   function Thumbs_Source_Prefix return String;
+   --  Source prefix used to reference thumbs in URL
+
    function Anonymous_Visit_Counter return Boolean;
    --  Counts anonymous clicks or only logged user clicks
 

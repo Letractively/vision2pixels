@@ -21,12 +21,6 @@
 
 package V2P.Web_Server is
 
-   Images_Source_Prefix : constant String := "/photos";
-   --  Source prefix used to reference images in URL
-
-   Thumbs_Source_Prefix : constant String := "/thumbs";
-   --  Source prefix used to reference thumbs in URL
-
    procedure Start;
    --  Start the Web Server, port is taken from the ini file
 
