@@ -34,6 +34,7 @@ package body Settings is
 
    type Attributes is
      (DB, DB_Name, Images_Path, Thumbs_Path,
+      Images_Source_Prefix, Thumbs_Source_Prefix,
       Anonymous_Visit_Counter, Anonymous_Comment, Descending_Order,
       Ignore_Author_Click, Limit_Image_Size, Image_Maximum_Width,
       Image_Maximum_Height, Image_Maximum_Size, Thumbnail_Maximum_Width,
@@ -142,6 +143,15 @@ package body Settings is
       return Conf.Get_Value (Image_Maximum_Width);
    end Image_Maximum_Width;
 
+   -------------------------
+   -- Image_Source_Prefix --
+   -------------------------
+
+   function Images_Source_Prefix return String is
+   begin
+      return Conf.Get_Value (Images_Source_Prefix);
+   end Images_Source_Prefix;
+
    ----------------------
    -- Limit_Image_Size --
    ----------------------
@@ -169,6 +179,15 @@ package body Settings is
       return Conf.Get_Value (Thumbnail_Maximum_Width);
    end Thumbnail_Maximum_Width;
 
+   --------------------------
+   -- Thumbs_Source_Prefix --
+   --------------------------
+
+   function Thumbs_Source_Prefix return String is
+   begin
+      return Conf.Get_Value (Thumbs_Source_Prefix);
+   end Thumbs_Source_Prefix;
+
    ------------------
    -- Virtual_Host --
    ------------------
@@ -194,6 +213,8 @@ begin
    Conf.Set_Value (DB_Name, Defaults.DB_Name);
    Conf.Set_Value (Images_Path, Defaults.Images_Path);
    Conf.Set_Value (Thumbs_Path, Defaults.Thumbs_Path);
+   Conf.Set_Value (Images_Source_Prefix, Defaults.Images_Source_Prefix);
+   Conf.Set_Value (Thumbs_Source_Prefix, Defaults.Thumbs_Source_Prefix);
    Conf.Set_Value (Anonymous_Visit_Counter, Defaults.Anonymous_Visit_Counter);
    Conf.Set_Value (Anonymous_Comment, Defaults.Anonymous_Comment);
    Conf.Set_Value (Descending_Order, Defaults.Descending_Order);

@@ -290,7 +290,8 @@ package body V2P.Web_Server is
 
       Templates.Insert
         (Translations, Templates.Assoc
-           (Template_Defs.Global.THUMB_SOURCE_PREFIX, Thumbs_Source_Prefix));
+           (Template_Defs.Global.THUMB_SOURCE_PREFIX,
+            Settings.Thumbs_Source_Prefix));
 
       Web_Page := Services.ECWF.Registry.Build
         (URI, Request, Translations, Cache_Control => Messages.Prevent_Cache);
@@ -897,8 +898,8 @@ package body V2P.Web_Server is
       File : constant String :=
                Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
                Settings.Get_Images_Path & Gwiad.OS.Directory_Separator
-                 & URI (URI'First +
-                          Images_Source_Prefix'Length + 1 .. URI'Last);
+        & URI (URI'First + Settings.Images_Source_Prefix'Length + 1
+               .. URI'Last);
    begin
       return Response.File (MIME.Content_Type (File), File);
    end Photos_Callback;
@@ -923,13 +924,13 @@ package body V2P.Web_Server is
 
       Services.Dispatchers.URI.Register
         (Main_Dispatcher,
-         Images_Source_Prefix,
+         Settings.Images_Source_Prefix,
          Action => Dispatchers.Callback.Create (Photos_Callback'Access),
          Prefix => True);
 
       Services.Dispatchers.URI.Register
         (Main_Dispatcher,
-         Thumbs_Source_Prefix,
+         Settings.Thumbs_Source_Prefix,
          Action => Dispatchers.Callback.Create (Thumbs_Callback'Access),
          Prefix => True);
 
@@ -1043,8 +1044,8 @@ package body V2P.Web_Server is
       File : constant String :=
                Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
                Settings.Get_Thumbs_Path & Gwiad.OS.Directory_Separator
-                 & URI (URI'First +
-                          Thumbs_Source_Prefix'Length + 1 .. URI'Last);
+        & URI (URI'First + Settings.Thumbs_Source_Prefix'Length + 1
+               .. URI'Last);
    begin
       return Response.File (MIME.Content_Type (File), File);
    end Thumbs_Callback;
