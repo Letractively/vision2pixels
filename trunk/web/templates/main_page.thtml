@@ -3,7 +3,6 @@
 @@-- HTTP_URL(/): Website root
 @@--
 @@INCLUDE@@ v2p_top.thtml @_BABEL_V2P_WEBSITE_NAME_@ main
-<div id="quick_login">@_LAZY_QUICK_LOGIN_@<div id="login" style="display:none">@_LAZY_LOGIN_@</div></div>
 <div class="forums">@_LAZY_FORUM_LIST_@</div>
 
 <h2>This is a demo site !</h2>
