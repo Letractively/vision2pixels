@@ -15,9 +15,6 @@
     <p><input name="ENTER" id="login_form_enter" type="submit" value="OK"/></p>
 
     <p id="cd_user"><a href="my">Créer/Modifier votre compte</a>
-      <a id="block_login_close" rel="login">
-        <img src="/css/img/close.gif" alt="@_BABEL_CLICK_TO_CLOSE_@"/>
-      </a>
     </p>
   </fieldset>
 </form>
@@ -52,4 +49,3 @@
 @@INCLUDE@@ ../we_js/aws_action_clear.tjs (onfocus, password_input, password_input)
 @@-- Logout
 @@INCLUDE@@ ../we_js/aws_action_xml.tjs (onclick, logout_enter)
-@@INCLUDE@@ ../we_js/aws_action_js.tjs (onclick, block_login_close, V2P.Tools.hide_rel)
