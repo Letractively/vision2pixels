@@ -4,7 +4,6 @@
 @@--
 @@INCLUDE@@ v2p_top.thtml @_BABEL_THREAD_LIST_@ forum_threads yui-t7
 @@--
-<div id="quick_login">@_LAZY_QUICK_LOGIN_@<div id="login" style="display:none">@_LAZY_LOGIN_@</div></div>
 <div class="forums">@_LAZY_FORUM_LIST_@</div>
 <div id="forum_filter">@_LAZY_FORUM_FILTER_@</div>
 <div id="forum_threads">@_LAZY_FORUM_THREADS_@</div>
