@@ -66,7 +66,7 @@
   </div>
   @@END_IF@@
 
-  @_LAZY_LOGIN_@
+  <div id="login">@_LAZY_LOGIN_@</div>
   <div id="new_comment">@_LAZY_NEW_COMMENT_@</div>
   <div class="forums">@_LAZY_FORUM_LIST_@</div>
 @@--
