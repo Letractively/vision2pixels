@@ -30,8 +30,7 @@ LOGFILE := $(INSTALL_TESTS)/web_harness.log.${shell date +%Y%m%d-%H%M%S}
 all:
 	-chmod a+w lib_ali/*
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb
-#	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
-# Does not compile ! ???
+	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
 
 setup:
 	-$(MKDIR) gen
@@ -65,7 +64,7 @@ install: install-dir
 	$(CP) templates/*.txml $(INSTALL)/templates
 	$(CP) we_js/*js $(INSTALL)/we_js
 	$(CP) xml/*xml $(INSTALL)/xml
-	$(CP) bin/vision2pixels$(EXEXT) $(INSTALL)/bin
+	$(CP) lib/vision2pixels$(SHEXT) $(INSTALL)/bin
 
 clean:
 	-$(RM) -r gen src/v2p-template_defs*
