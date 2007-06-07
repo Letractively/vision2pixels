@@ -59,6 +59,18 @@ project Web_Test is
    -- Linker --
    ------------
 
-   package Linker renames Shared.Linker;
+   package Linker is
+
+      case Shared.Build is
+         when "Debug" =>
+            for Default_Switches ("Ada") use
+               ("-g", "-lodbc", "-L" & Shared.ImageMagick_Lib, "-L" & Shared.Jpeg_Lib);
+
+         when "Release" =>
+            for Default_Switches ("Ada") use
+               ("-lodbc", "-L" & Shared.ImageMagick_Lib, "-L" & Shared.Jpeg_Lib);
+      end case;
+   end Linker;
+
 
 end Web_Test;
