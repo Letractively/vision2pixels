@@ -25,8 +25,6 @@ with V2P.Database;
 with V2P.Context;
 with V2P.Template_Defs.Block_Forum_Filter;
 with V2P.Template_Defs.Block_New_Comment;
-with V2P.Template_Defs.User_Page;
-with V2P.Template_Defs.Block_User_Page;
 with V2P.Template_Defs.Global;
 
 package body V2P.ECWF_Callbacks is
@@ -225,32 +223,6 @@ package body V2P.ECWF_Callbacks is
          Context.Remove ("TID");
       end if;
    end New_Post;
-
-   ---------------
-   -- User_Page --
-   ---------------
-
-   procedure User_Page
-     (Request      : in Status.Data;
-      Context      : access ECWF.Context.Object;
-      Translations : in out Templates.Translate_Set)
-   is
-      pragma Unreferenced (Context);
-      URI : constant String := Status.URI (Request);
-      SID : constant Session.Id := Status.Session (Request);
-   begin
-
-      Templates.Insert (Translations,
-                        Database.Get_User_Page
-                          (Uid => Session.Get (SID, "LOGIN")));
-
-      Templates.Insert
-        (Translations,
-         Templates.Assoc
-           (Template_Defs.Block_User_Page.USER_NAME,
-            URI (URI'First + Template_Defs.User_Page.URL'Length .. URI'Last)));
-
-   end User_Page;
 
    ----------------------
    -- User_Thread_List --
