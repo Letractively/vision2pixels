@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2006-2007                          --
+--                           Copyright (C) 2007                             --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -19,46 +19,6 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with "../lib/aunit/v2p_aunit";
+with AUnit_Framework.Framework;
 
-with "../shared";
-with "../image/image_test";
-with "../db/db_test";
-with "web";
-
-project Web_Test is
-
-   for Languages use ("Ada");
-
-   for Source_Dirs use ("test/src");
-   for Object_Dir use "test/obj";
-   for Exec_Dir use "test/bin";
-   for Main use ("web_harness");
-
-   -------------
-   -- Builder --
-   -------------
-
-   package Builder renames Shared.Builder;
-
-   --------------
-   -- Compiler --
-   --------------
-
-   package Compiler is
-      for Default_Switches ("Ada") use ("-gnat05") & Shared.Debug_Options;
-   end Compiler;
-
-   ------------
-   -- Binder --
-   ------------
-
-   package Binder renames Shared.Binder;
-
-   ------------
-   -- Linker --
-   ------------
-
-   package Linker renames Shared.Linker;
-
-end Web_Test;
+package AUnit is new AUnit_Framework.Framework (10, 10, 100, 100);

@@ -22,7 +22,7 @@
 --  This is the main driver for the test suite(s)
 
 with Ada.Text_IO;
-with AUnit.Test_Runner;
+with AUnit;
 
 with V2P.Web_Server;
 
@@ -64,7 +64,7 @@ begin
 
    --  Stop server
 
-   V2P.Web_Server.Stop;
+--     V2P.Web_Server.Stop;
 
    Text_IO.Put_Line ("(web_harness): End");
 end Web_Harness;

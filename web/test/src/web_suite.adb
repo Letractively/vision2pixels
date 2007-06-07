@@ -19,7 +19,7 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AUnit.Test_Suites; use AUnit.Test_Suites;
+with AUnit; use AUnit; use AUnit.Test_Suites;
 
 with Web_Tests.Threads_Navigation;
 with Web_Tests.User;

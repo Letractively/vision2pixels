@@ -24,13 +24,15 @@ with Ada.Text_IO;
 
 with GNAT.Regpat;
 
-with AUnit.Assertions; use AUnit.Assertions;
+with AUnit;
 with AWS.Utils;
 
 package body Web_Tests is
 
    use Ada;
    use Ada.Strings.Fixed;
+   use AUnit;
+   use AUnit.Assertions;
 
    function "-"
      (Str : in Unbounded_String)
