@@ -40,6 +40,7 @@ with V2P.Context;
 with V2P.Template_Defs.Forum_Entry;
 with V2P.Template_Defs.Forum_Threads;
 with V2P.Template_Defs.Forum_Post;
+with V2P.Template_Defs.User_Page;
 with V2P.Template_Defs.Main_Page;
 with V2P.Template_Defs.Error;
 with V2P.Template_Defs.Global;
@@ -939,6 +940,12 @@ package body V2P.Web_Server is
       --  This default callback will handle all ECWF callbacks
 
       --  Register ECWF pages
+
+      Services.ECWF.Registry.Register
+        (Key          => Template_Defs.User_Page.URL,
+         Template     => Template_Defs.User_Page.Template,
+         Data_CB      => null,
+         Prefix       => True);
 
       Services.ECWF.Registry.Register
         (Template_Defs.Block_Login.Ajax.onclick_login_form_enter,

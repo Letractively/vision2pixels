@@ -83,6 +83,11 @@ package V2P.ECWF_Callbacks is
       Context      : access ECWF.Context.Object;
       Translations : in out Templates.Translate_Set) is null;
 
+   procedure User_Page
+     (Request      : in Status.Data;
+      Context      : access ECWF.Context.Object;
+      Translations : in out Templates.Translate_Set);
+
    procedure User_Thread_List
      (Request      : in     Status.Data;
       Context      : access ECWF.Context.Object;
