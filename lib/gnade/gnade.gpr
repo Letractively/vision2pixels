@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 with "../../shared";
+with "sqlite3";
 
 project GNADE is
 
@@ -29,6 +30,13 @@ project GNADE is
    for Library_Dir use "lib";
    for Library_Name use "v2p_gnade";
    for Library_Kind use "dynamic";
+
+   case Shared.OS is
+      when "Windows_NT" =>
+         for Library_Options use ("-lodbc32");
+      when others =>
+         null;
+   end case;
 
    Common_Options  :=
      ("-Wall", "-fno-strict-aliasing");
