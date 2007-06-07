@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                         Copyright (C) 2006-2007                          --
---                      Pascal Obry - Olivier Ramonat                       --
+--                           Copyright (C) 2007                             --
+--                      Olivier Ramonat - Pascal Obry                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
 --  it under the terms of the GNU General Public License as published by    --
@@ -16,49 +16,14 @@
 --                                                                          --
 --  You should have received a copy of the GNU General Public License       --
 --  along with this library; if not, write to the Free Software Foundation, --
---  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
+--  Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.          --
 ------------------------------------------------------------------------------
 
-with "../lib/aunit/v2p_aunit";
+with "aunit";
 
-with "../shared";
-with "../image/image_test";
-with "../db/db_test";
-with "web";
+project V2P_AUnit is
 
-project Web_Test is
+   for Source_Dirs use ("src");
+   for Object_Dir use "obj";
 
-   for Languages use ("Ada");
-
-   for Source_Dirs use ("test/src");
-   for Object_Dir use "test/obj";
-   for Exec_Dir use "test/bin";
-   for Main use ("web_harness");
-
-   -------------
-   -- Builder --
-   -------------
-
-   package Builder renames Shared.Builder;
-
-   --------------
-   -- Compiler --
-   --------------
-
-   package Compiler is
-      for Default_Switches ("Ada") use ("-gnat05") & Shared.Debug_Options;
-   end Compiler;
-
-   ------------
-   -- Binder --
-   ------------
-
-   package Binder renames Shared.Binder;
-
-   ------------
-   -- Linker --
-   ------------
-
-   package Linker renames Shared.Linker;
-
-end Web_Test;
+end V2P_AUnit;

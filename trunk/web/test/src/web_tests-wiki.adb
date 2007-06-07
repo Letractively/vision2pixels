@@ -21,9 +21,6 @@
 
 with Ada.Text_IO;
 
-with AUnit.Test_Cases.Registration;
-with AUnit.Assertions;
-
 with V2P.Wiki;
 
 package body Web_Tests.Wiki is
@@ -39,9 +36,9 @@ package body Web_Tests.Wiki is
    -- Name --
    ----------
 
-   function Name (T : in Test_Case) return String_Access is
+   function Name (T : in Test_Case) return Message_String is
    begin
-      return new String'("Web_Tests.Wiki");
+      return New_String ("Web_Tests.Wiki");
    end Name;
 
    --------------------
