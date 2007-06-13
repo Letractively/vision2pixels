@@ -24,17 +24,18 @@
 # Options
 
 INSTALL=$(HOME)/opt/v2p
-INSTALL_GWIAD_PLUGIN=/opt/gwiad
-GWIAD_UNREGISTER_SCRIPT = /opt/gwiad/scripts/unregister
+
+GWIAD_ROOT=$(HOME)/opt/gwiad
+GWIAD_UNREGISTER_SCRIPT=$(GWIAD_ROOT)/scripts/unregister
 GWIAD_HOST=127.0.0.1:8080
 MODE=Debug
 
 ifeq ($(OS),Windows_NT)
 EXEXT=.exe
-SHEXT=.dll
+SOEXT=.dll
 else
 EXEXT=
-SHEXT=.so
+SOEXT=.so
 endif
 
 CP=cp -p
@@ -86,25 +87,30 @@ install: $(MODULES_INSTALL)
 
 install_gwiad_plugin:
 	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website \
-		/opt/gwiad/lib/libvision2pixel.$(SHEXT)
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img
+		/opt/gwiad/lib/*vision2pixel$(SOEXT)
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/templates/
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/xml
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/we_js
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css/img
 	cp -r web/templates/*.thtml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
 	cp -r web/templates/*.txml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
 	cp -r web/xml/*xml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml/
+		$(GWIAD_ROOT)/plugins/vision2pixels/xml/
 	cp -r web/we_js/*js \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js/
+		$(GWIAD_ROOT)/plugins/vision2pixels/we_js/
 	cp -r web/css/*css \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/
+		$(GWIAD_ROOT)/plugins/vision2pixels/css/
 	cp -r web/css/img/* \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img/
-	cp web/lib/*$(SHEXT) $(INSTALL_GWIAD_PLUGIN)/lib/
+		$(GWIAD_ROOT)/plugins/vision2pixels/css/img/
+	cp web/lib/*$(SOEXT) $(GWIAD_ROOT)/lib/websites
+	cp db/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	cp image/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	cp kernel/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	cp lib/components/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	cp lib/gnade/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 
 clean: $(MODULES_CLEAN)
 
