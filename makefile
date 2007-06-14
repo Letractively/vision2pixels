@@ -32,10 +32,10 @@ MODE=Debug
 
 ifeq ($(OS),Windows_NT)
 EXEXT=.exe
-SOEXT=.dll
+SHEXT=.dll
 else
 EXEXT=
-SOEXT=.so
+SHEXT=.so
 endif
 
 CP=cp -p
@@ -87,30 +87,25 @@ install: $(MODULES_INSTALL)
 
 install_gwiad_plugin:
 	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website \
-		/opt/gwiad/lib/*vision2pixel$(SOEXT)
-	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/templates/
-	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/xml
-	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/we_js
-	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css
-	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css/img
+		/opt/gwiad/lib/libvision2pixel.$(SHEXT)
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css
+	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img
 	cp -r web/templates/*.thtml \
-		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
 	cp -r web/templates/*.txml \
-		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
 	cp -r web/xml/*xml \
-		$(GWIAD_ROOT)/plugins/vision2pixels/xml/
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml/
 	cp -r web/we_js/*js \
-		$(GWIAD_ROOT)/plugins/vision2pixels/we_js/
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js/
 	cp -r web/css/*css \
-		$(GWIAD_ROOT)/plugins/vision2pixels/css/
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/
 	cp -r web/css/img/* \
-		$(GWIAD_ROOT)/plugins/vision2pixels/css/img/
-	cp web/lib/*$(SOEXT) $(GWIAD_ROOT)/lib/websites
-	cp db/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
-	cp image/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
-	cp kernel/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
-	cp lib/components/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
-	cp lib/gnade/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img/
+	cp web/lib/*$(SHEXT) $(INSTALL_GWIAD_PLUGIN)/lib/
 
 clean: $(MODULES_CLEAN)
 
