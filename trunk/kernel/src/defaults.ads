@@ -61,6 +61,6 @@ package Defaults is
 
    Wiki_Service_Name        : constant String  := "wiki_service";
 
-   Virtual_Host             : constant String  := "localhost";
+   Virtual_Host             : constant String  := "127.0.0.10";
 
 end Defaults;

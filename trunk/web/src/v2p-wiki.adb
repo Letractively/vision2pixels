@@ -25,12 +25,12 @@ with Ada.Exceptions;
 with Settings;
 
 with Wiki_Interface;
-with Gwiad.Services.Register;
+with Gwiad.Registry.Services.Register;
 
 package body V2P.Wiki is
 
    use Ada;
-   use Gwiad.Services.Register;
+   use Gwiad.Registry.Services.Register;
 
    Wiki_Id : Service_Id := Null_Service_Id;
 
@@ -49,8 +49,7 @@ package body V2P.Wiki is
       if Wiki_Id = Null_Service_Id then
          declare
             Wiki_World_Service_Access : constant GW_Service_Access
-              := GW_Service_Access (Gwiad.Services.Register.Get
-                                    (Settings.Wiki_Service_Name));
+              := GW_Service_Access (Get (Settings.Wiki_Service_Name));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
@@ -61,9 +60,9 @@ package body V2P.Wiki is
                Img_Base_URL   => Settings.Images_Source_Prefix,
                Text_Directory => "");
 
-            Wiki_Id := Gwiad.Services.Register.Set
-              (Settings.Wiki_Service_Name,
-               Gwiad.Services.Service_Access (Wiki_World_Service_Access));
+            Wiki_Id := Set (Settings.Wiki_Service_Name,
+                            Gwiad.Registry.Services.Service_Access
+                              (Wiki_World_Service_Access));
 
             return Get_Service;
          end;
@@ -71,9 +70,8 @@ package body V2P.Wiki is
          declare
             Wiki_World_Service_Access : constant GW_Service_Access :=
                                           GW_Service_Access
-                                            (Gwiad.Services.Register.Get
-                                               (Settings.Wiki_Service_Name,
-                                                Wiki_Id));
+                                            (Get (Settings.Wiki_Service_Name,
+                                                  Wiki_Id));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
@@ -93,7 +91,7 @@ package body V2P.Wiki is
    function Wiki_To_HTML (S : in String) return String is
    begin
 
-      if not Gwiad.Services.Register.Exists (Settings.Wiki_Service_Name) then
+      if not Exists (Settings.Wiki_Service_Name) then
          return "";
       end if;
 

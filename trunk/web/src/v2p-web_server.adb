@@ -32,7 +32,7 @@ with AWS.Status;
 with AWS.Templates;
 
 with Gwiad.Web.Register.Virtual_Host;
-with Gwiad.Websites.Register;
+with Gwiad.Registry.Websites.Register;
 with Gwiad.OS;
 
 with V2P.Database;
@@ -1079,7 +1079,7 @@ begin
    Start;
    Gwiad.Web.Register.Virtual_Host.Register (Hostname => Settings.Virtual_Host,
                                              Action  => Main_Dispatcher);
-   Gwiad.Websites.Register.Register
+   Gwiad.Registry.Websites.Register.Register
      (Name        => "vision2pixel",
       Description => "a Web space engine to comment user's photos",
       Unregister  => Unregister'Access);
