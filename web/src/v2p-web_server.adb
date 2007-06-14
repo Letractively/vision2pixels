@@ -33,7 +33,7 @@ with AWS.Templates;
 
 with Gwiad.Web.Register.Virtual_Host;
 with Gwiad.Registry.Websites.Register;
-with Gwiad.OS;
+with Morzhol.OS;
 
 with V2P.Database;
 with V2P.Context;
@@ -74,6 +74,8 @@ package body V2P.Web_Server is
 
    use AWS;
    use Ada;
+
+   use Morzhol.OS;
 
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
 
@@ -232,7 +234,7 @@ package body V2P.Web_Server is
       SID          : constant Session.Id := Status.Session (Request);
       URI          : constant String := Status.URI (Request);
       File         : constant String :=
-                      Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator
+                      Gwiad_Plugin_Path & Directory_Separator
                          & URI (URI'First + 1 .. URI'Last);
       Translations : Templates.Translate_Set;
    begin
@@ -896,8 +898,8 @@ package body V2P.Web_Server is
    function Photos_Callback (Request : in Status.Data) return Response.Data is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
-               Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
-               Settings.Get_Images_Path & Gwiad.OS.Directory_Separator
+               Gwiad_Plugin_Path & Directory_Separator &
+               Settings.Get_Images_Path & Directory_Separator
         & URI (URI'First + Settings.Images_Source_Prefix'Length + 1
                .. URI'Last);
    begin
@@ -1042,8 +1044,8 @@ package body V2P.Web_Server is
    function Thumbs_Callback (Request : in Status.Data) return Response.Data is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
-               Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
-               Settings.Get_Thumbs_Path & Gwiad.OS.Directory_Separator
+               Gwiad_Plugin_Path & Directory_Separator &
+               Settings.Get_Thumbs_Path & Directory_Separator
         & URI (URI'First + Settings.Thumbs_Source_Prefix'Length + 1
                .. URI'Last);
    begin
@@ -1067,7 +1069,7 @@ package body V2P.Web_Server is
    function WEJS_Callback (Request : in Status.Data) return Response.Data is
       URI          : constant String := Status.URI (Request);
       File         : constant String := Gwiad_Plugin_Path
-        & Gwiad.OS.Directory_Separator & URI (URI'First + 1 .. URI'Last);
+        & Directory_Separator & URI (URI'First + 1 .. URI'Last);
       Translations : Templates.Translate_Set;
    begin
       return Response.Build

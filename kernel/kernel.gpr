@@ -19,8 +19,8 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
+with "morzhol";
 with "../shared";
-with "../lib/components/components";
 
 project Kernel is
 

@@ -27,7 +27,7 @@ with Ada.Text_IO;
 
 with DB;
 with Image.Metadata.Embedded;
-with Gwiad.OS;
+with Morzhol.OS;
 with Settings;
 
 with V2P.DB_Handle;
@@ -49,6 +49,8 @@ package body V2P.Database is
    use Ada;
    use Ada.Exceptions;
    use Ada.Strings.Unbounded;
+
+   use Morzhol.OS;
 
    use V2P.Context;
    use V2P.Template_Defs;
@@ -102,7 +104,7 @@ package body V2P.Database is
    begin
       if not DBH.Connected then
          DBH.Handle := new DB.Handle'Class'(DB_Handle.Get);
-         DBH.Handle.Connect (Gwiad_Plugin_Path & Gwiad.OS.Directory_Separator &
+         DBH.Handle.Connect (Gwiad_Plugin_Path & Directory_Separator &
                              Settings.Get_DB_Name);
          DBH.Connected := True;
          DBH_TLS.Set_Value (DBH);
@@ -465,7 +467,7 @@ package body V2P.Database is
             Iter.Get_Line (Line);
 
             Exif := Image.Metadata.Embedded.Get
-              (Settings.Get_Images_Path & Gwiad.OS.Directory_Separator
+              (Settings.Get_Images_Path & Directory_Separator
                & DB.String_Vectors.Element (Line, 1));
          end if;
 

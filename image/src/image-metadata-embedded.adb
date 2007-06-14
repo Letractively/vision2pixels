@@ -25,12 +25,14 @@
 with GNAT.Expect;
 with GNAT.Regpat;
 
-with Gwiad.OS;
+with Morzhol.OS;
 
 package body Image.Metadata.Embedded is
 
    use Ada;
    use GNAT;
+
+   use Morzhol.OS;
 
    Exiftool     : aliased String := "exiftool";
    Exiftool_Opt : aliased String := "-e";
@@ -98,7 +100,7 @@ package body Image.Metadata.Embedded is
 
    begin
       begin
-         if Gwiad.OS.Is_Windows then
+         if Is_Windows then
             Expect.Non_Blocking_Spawn
               (Pd, Cmd,
                (1 => Cmd_Option'Access,

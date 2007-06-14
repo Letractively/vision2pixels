@@ -22,7 +22,7 @@
 with Ada.Exceptions;
 with Ada.Text_IO;
 
-with Config;
+with Morzhol.Iniparser;
 with Defaults;
 
 package body Settings is
@@ -40,7 +40,7 @@ package body Settings is
       Image_Maximum_Height, Image_Maximum_Size, Thumbnail_Maximum_Width,
       Thumbnail_Maximum_Height, Virtual_Host, Wiki_Service_Name);
 
-   package Conf is new Config (Attributes);
+   package Conf is new Morzhol.Iniparser (Attributes);
 
    package DB_Conf is new Conf.Enum_Values (DB_Kind);
 
