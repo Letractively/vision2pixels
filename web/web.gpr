@@ -21,8 +21,8 @@
 
 with "aws";
 
-with "gwiad-services";
-with "gwiad-websites";
+with "gwiad-registry-services";
+with "gwiad-registry-websites";
 with "gwiad-web";
 with "gwiad-ecwf";
 
