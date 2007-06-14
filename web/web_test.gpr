@@ -59,25 +59,18 @@ project Web_Test is
    -- Linker --
    ------------
 
-   Lib_Paths := ("-L" & Shared.ImageMagick_Lib, "-L" & Shared.Jpeg_Lib);
-
    package Linker is
-
-      case Shared.OS is
-         when "Windows_NT" =>
-            for Default_Switches ("Ada") use Lib_Paths;
-         when others =>
-            for Default_Switches ("Ada") use Lib_Paths & ("-lodbc");
-      end case;
 
       case Shared.Build is
          when "Debug" =>
             for Default_Switches ("Ada") use
-              Linker'Default_Switches ("Ada") & ("-g");
+               ("-g", "-lodbc", "-L" & Shared.ImageMagick_Lib, "-L" & Shared.Jpeg_Lib);
 
          when "Release" =>
-            null;
+            for Default_Switches ("Ada") use
+               ("-lodbc", "-L" & Shared.ImageMagick_Lib, "-L" & Shared.Jpeg_Lib);
       end case;
    end Linker;
+
 
 end Web_Test;
