@@ -32,10 +32,10 @@ MODE=Debug
 
 ifeq ($(OS),Windows_NT)
 EXEXT=.exe
-SHEXT=.dll
+SOEXT=.dll
 else
 EXEXT=
-SHEXT=.so
+SOEXT=.so
 endif
 
 CP=cp -p
@@ -46,7 +46,7 @@ LOG := ${shell pwd}/log.${shell date +%Y%m%d-%H%M%S}
 
 OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 	CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" MAKE="$(MAKE)" \
-	LOG="$(LOG)"
+	LOG="$(LOG)" SOEXT="$(SOEXT)"
 
 # Modules support
 
@@ -87,25 +87,30 @@ install: $(MODULES_INSTALL)
 
 install_gwiad_plugin:
 	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website \
-		/opt/gwiad/lib/libvision2pixel.$(SHEXT)
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css
-	mkdir -p $(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img
-	cp -r web/templates/*.thtml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
-	cp -r web/templates/*.txml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/templates/
-	cp -r web/xml/*xml \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/xml/
-	cp -r web/we_js/*js \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/we_js/
-	cp -r web/css/*css \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/
-	cp -r web/css/img/* \
-		$(INSTALL_GWIAD_PLUGIN)/plugins/vision2pixels/css/img/
-	cp web/lib/*$(SHEXT) $(INSTALL_GWIAD_PLUGIN)/lib/
+		/opt/gwiad/lib/*vision2pixel$(SOEXT)
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/templates/
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/xml
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/we_js
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css/img
+	$(CP) -r web/templates/*.thtml \
+		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
+	$(CP) -r web/templates/*.txml \
+		$(GWIAD_ROOT)/plugins/vision2pixels/templates/
+	$(CP) -r web/xml/*xml \
+		$(GWIAD_ROOT)/plugins/vision2pixels/xml/
+	$(CP) -r web/we_js/*js \
+		$(GWIAD_ROOT)/plugins/vision2pixels/we_js/
+	$(CP) -r web/css/*css \
+		$(GWIAD_ROOT)/plugins/vision2pixels/css/
+	$(CP) -r web/css/img/* \
+		$(GWIAD_ROOT)/plugins/vision2pixels/css/img/
+	$(CP) web/lib/*$(SOEXT) $(GWIAD_ROOT)/lib/websites
+	$(CP) db/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	$(CP) image/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	$(CP) kernel/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	$(CP) lib/components/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
+	$(CP) lib/gnade/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 
 clean: $(MODULES_CLEAN)
 
