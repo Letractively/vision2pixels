@@ -22,6 +22,11 @@
 <div id="logged_box">
   <ul>
     <li>
+      <a href="/~@_LOGIN_@">
+        @_BABEL_YOUR_PAGE_@
+      </a>
+    </li>
+    <li>
     <a href="@_FORUM_POST_URL_@">
       @_BABEL_NEW_POST_@
     </a>
