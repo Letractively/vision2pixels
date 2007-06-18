@@ -179,7 +179,6 @@ package body V2P.Web_Server is
       Translations : in out Templates.Translate_Set);
    --  Adds a new photo in user tmp photo table
 
-
    procedure Main_Page_Callback
      (Request      : in     Status.Data;
       Context      : access Services.ECWF.Context.Object;
@@ -202,6 +201,9 @@ package body V2P.Web_Server is
 
    function Is_Valid_Comment (Comment : in String) return Boolean;
    --  Check if the comment is valid
+
+   function Get_Images_Path return String;
+   --  Returns the current image path for the running plugin
 
    --------------------
    -- Context_Filter --
@@ -440,6 +442,16 @@ package body V2P.Web_Server is
       Context_Filter (Context);
    end Forum_Threads_Callback;
 
+   ---------------------
+   -- Get_Images_Path --
+   ---------------------
+
+   function Get_Images_Path return String is
+   begin
+      return Gwiad_Plugin_Path
+        & Morzhol.OS.Directory_Separator & Settings.Get_Images_Path;
+   end Get_Images_Path;
+
    ----------------------
    -- Is_Valid_Comment --
    ----------------------
@@ -552,12 +564,15 @@ package body V2P.Web_Server is
                        Parameters.Get
                          (P, Template_Defs.Block_New_Photo.HTTP.FILENAME);
 
-      Images_Path  : String renames Settings.Get_Images_Path;
+      Images_Path  : String renames Get_Images_Path;
 
       New_Image    : Image_Data;
 
    begin
-      Init (Img => New_Image, Filename => Filename);
+      Init
+        (Img      => New_Image,
+         Root_Dir => Gwiad_Plugin_Path,
+         Filename => Filename);
 
       if New_Image.Init_Status /= Image_Created then
          Templates.Insert
@@ -582,7 +597,7 @@ package body V2P.Web_Server is
          declare
             New_Photo_Filename : constant String
               := New_Image.Filename
-                ((Images_Path'Length + 2) .. New_Image.Filename'Last);
+                (Images_Path'Length + 1 .. New_Image.Filename'Last);
             Pid                : constant String
               := Database.Insert_Photo
                 (Login,
@@ -899,9 +914,10 @@ package body V2P.Web_Server is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
                Gwiad_Plugin_Path & Directory_Separator &
-               Settings.Get_Images_Path & Directory_Separator
-        & URI (URI'First + Settings.Images_Source_Prefix'Length + 1
-               .. URI'Last);
+                 Settings.Get_Images_Path & Directory_Separator
+                   & URI
+                      (URI'First +
+                         Settings.Images_Source_Prefix'Length + 1 .. URI'Last);
    begin
       return Response.File (MIME.Content_Type (File), File);
    end Photos_Callback;
@@ -1034,7 +1050,6 @@ package body V2P.Web_Server is
          MIME.Text_XML);
       --  All URLs starting with XML_Prefix_URI are handled by a specific
       --  callback returning the corresponding file in the xml directory.
-
    end Start;
 
    ---------------------
@@ -1045,9 +1060,10 @@ package body V2P.Web_Server is
       URI  : constant String := Status.URI (Request);
       File : constant String :=
                Gwiad_Plugin_Path & Directory_Separator &
-               Settings.Get_Thumbs_Path & Directory_Separator
-        & URI (URI'First + Settings.Thumbs_Source_Prefix'Length + 1
-               .. URI'Last);
+                 Settings.Get_Thumbs_Path & Directory_Separator
+                   & URI
+                      (URI'First +
+                         Settings.Thumbs_Source_Prefix'Length + 1 .. URI'Last);
    begin
       return Response.File (MIME.Content_Type (File), File);
    end Thumbs_Callback;
@@ -1079,10 +1095,13 @@ package body V2P.Web_Server is
 
 begin
    Start;
-   Gwiad.Web.Register.Virtual_Host.Register (Hostname => Settings.Virtual_Host,
-                                             Action  => Main_Dispatcher);
+
+   Gwiad.Web.Register.Virtual_Host.Register
+     (Hostname => Settings.Virtual_Host,
+      Action   => Main_Dispatcher);
+
    Gwiad.Registry.Websites.Register.Register
-     (Name        => "vision2pixel",
+     (Name        => "vision2pixels",
       Description => "a Web space engine to comment user's photos",
       Unregister  => Unregister'Access);
 end V2P.Web_Server;

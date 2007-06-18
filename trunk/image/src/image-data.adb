@@ -24,6 +24,7 @@ with Ada.Text_IO;
 
 with GNAT.Calendar.Time_IO;
 
+with Morzhol.OS;
 with G2F.Image_IO;
 with Image.Magick;
 with Settings;
@@ -169,6 +170,7 @@ package body Image.Data is
 
    procedure Init
      (Img      : in out Image_Data;
+      Root_Dir : in     String;
       Filename : in     String)
    is
       Now             : constant Calendar.Time := Calendar.Clock;
@@ -179,14 +181,16 @@ package body Image.Data is
       S_Name          : constant String := Simple_Name (Filename);
       Thumb_Name      : constant String :=
                           Compose
-                            (Compose (Compose (Settings.Get_Thumbs_Path, Year),
-                             Filename_Prefix),
-                             S_Name);
+                            (Compose
+                               (Root_Dir & Morzhol.OS.Directory_Separator &
+                                Settings.Get_Thumbs_Path, Year),
+                             Filename_Prefix & S_Name);
       Image_Name      : constant String :=
                           Compose
-                            (Compose (Compose (Settings.Get_Images_Path, Year),
-                             Filename_Prefix),
-                             S_Name);
+                            (Compose
+                               (Root_Dir & Morzhol.OS.Directory_Separator &
+                                Settings.Get_Images_Path, Year),
+                             Filename_Prefix & S_Name);
    begin
       if not Exists (Containing_Directory (Thumb_Name)) then
          Create_Path (Containing_Directory (Thumb_Name));
@@ -217,12 +221,4 @@ package body Image.Data is
       Img.Info_Ptr := Clone_Image_Info (null);
    end Initialize;
 
-begin
-   if not Exists (Settings.Get_Images_Path) then
-      Create_Path (Settings.Get_Images_Path);
-   end if;
-
-   if not Exists (Settings.Get_Thumbs_Path) then
-      Create_Path (Settings.Get_Thumbs_Path);
-   end if;
 end Image.Data;
