@@ -87,7 +87,7 @@ install: $(MODULES_INSTALL)
 
 install_gwiad_plugin:
 	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website \
-		/opt/gwiad/lib/*vision2pixel$(SOEXT)
+		$(GWIAD_ROOT)/lib/websites/libvision2pixels$(SOEXT)
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/templates/
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/xml
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/we_js
