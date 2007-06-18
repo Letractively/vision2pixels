@@ -14,6 +14,14 @@ input[type="submit"] {
    color:#000000;
 }
 
+strong {
+   font-weight: bolder;
+}
+
+cite, em {
+   font-style: italic;
+}
+
 @@--  Blocks
 
 div#image_block {
@@ -56,7 +64,7 @@ body.forum_entry #new_comment legend {
 }
 
 body.forum_entry #new_comment input,
-body.forum_entry #new_comment textarea
+   body.forum_entry #new_comment textarea
 {
    width:95%;
    padding:0.2em;
@@ -100,9 +108,9 @@ form#login_form {
 }
 
 form#login_form legend,
-form#login_form p {
-   display:inline;
-}
+   form#login_form p {
+      display:inline;
+   }
 
 form#login_form p#cd_user {
    display:block;
@@ -191,7 +199,7 @@ select, input, textarea
 }
 
 input:hoover,
-textarea:hoover
+   textarea:hoover
 {
    color:white;
 }
@@ -212,38 +220,38 @@ ul#navcontainer li.index a {
 @@-- Slides
 .slides
 {
-    clear: both;
-    float: left;
-    width: 100%;
-    list-style: none;
-    line-height: 1em;
-    margin-top: 2em;
+   clear: both;
+   float: left;
+   width: 100%;
+   list-style: none;
+   line-height: 1em;
+   margin-top: 2em;
 }
 
 .slides li {
-    display: block;
-    float: left;
-    width: 300px;
-    height: 200px;
-    margin: 0 10px 10px 0;
-    padding: 0;
-    text-align: center;
+   display: block;
+   float: left;
+   width: 300px;
+   height: 200px;
+   margin: 0 10px 10px 0;
+   padding: 0;
+   text-align: center;
 }
 
 .slides li p {
-    margin: 0.5em;
+   margin: 0.5em;
 }
 
 .slides div {
-    display: block;
-    width: 200px;
+   display: block;
+   width: 200px;
 }
 
 .slides li p a {
-    color: #424242;
-    font-size: 1.1em;
-    font-weight: bold;
-    text-decoration: none;
+   color: #424242;
+   font-size: 1.1em;
+   font-weight: bold;
+   text-decoration: none;
 }
 
 
@@ -254,31 +262,31 @@ refuse to activate the form if the submit button is not displayed. For
 the record, using "visibility: hidden" does not work. So the trick is
 to make the button with a null size and move it outside of the
 display. */
-    width: 0;
-    height: 0;
-    position: absolute;
-    left: -9000px;
+   width: 0;
+   height: 0;
+   position: absolute;
+   left: -9000px;
 }
 
 #new_comment {
-    margin-top: 2em;
+   margin-top: 2em;
 }
 
 
 .thumbs img
 {
-    border: thin solid silver;
-    margin-bottom: 0.3em;
+   border: thin solid silver;
+   margin-bottom: 0.3em;
 }
 
 .thumbs
 {
-    text-align: center;
+   text-align: center;
 }
 
 
 ol.comments {
-    padding: 1em;
+   padding: 1em;
 
 }
 
@@ -292,31 +300,31 @@ li.level_1
 
 li.type_0
 {
-    background-color: #000000;
+   background-color: #000000;
 }
 
 
 
 .thumbselect {
-    background-position: left center;
-    background-repeat: no-repeat;
-    height: 80px;
-    padding-left: 90px;
+   background-position: left center;
+   background-repeat: no-repeat;
+   height: 80px;
+   padding-left: 90px;
 }
 
 .thumboption {
-    background-position: left center;
-    background-repeat: no-repeat;
-    height: 40px;
-    margin-bottom: 2px;
-    padding-left: 90px;
+   background-position: left center;
+   background-repeat: no-repeat;
+   height: 40px;
+   margin-bottom: 2px;
+   padding-left: 90px;
 }
 
 #show_new_photo_post {
-    background: url(/css/img/list-add.gif);
-    background-position: left center;
-    background-repeat: no-repeat;
-    padding: 10px 10px 10px 40px;
+   background: url(/css/img/list-add.gif);
+   background-position: left center;
+   background-repeat: no-repeat;
+   padding: 10px 10px 10px 40px;
 }
 
 a#show_new_photo_post {
@@ -387,4 +395,72 @@ ol#comments p.commentmetadata {
 
 ol#comments p.comment_body {
    line-height:1.5em;
+}
+
+
+@@--  User page
+
+body.user_page form#user_page_edit_form,
+   #user_page_content
+{
+   margin:2em 0 0 1em;
+}
+
+body.user_page form#user_page_edit_form textarea#content_input {
+   width:80em;
+   height:30em;
+}
+
+#user_page_content h1 {
+   font-size:1.4em;
+}
+
+#user_page_content h2 {
+   font-size:1.2em;
+}
+
+#user_page_content h3 {
+   font-size:1.1em;
+}
+
+
+#user_page_content h1 {
+   display: block;
+   font-size: 2em;
+   font-weight: bold;
+   margin: .67em 0;
+}
+
+#user_page_content h2 {
+   display: block;
+   font-size: 1.5em;
+   font-weight: bold;
+   margin: .83em 0;
+}
+
+#user_page_content h3 {
+   display: block;
+   font-size: 1.17em;
+   font-weight: bold;
+   margin: 1em 0;
+}
+
+#user_page_content h4 {
+   display: block;
+   font-weight: bold;
+   margin: 1.33em 0;
+}
+
+#user_page_content h5 {
+   display: block;
+   font-size: 0.83em;
+   font-weight: bold;
+   margin: 1.67em 0;
+}
+
+#user_page_content h6 {
+   display: block;
+   font-size: 0.67em;
+   font-weight: bold;
+   margin: 2.33em 0;
 }
