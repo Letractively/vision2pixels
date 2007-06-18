@@ -109,7 +109,6 @@ install_gwiad_plugin:
 	$(CP) db/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 	$(CP) image/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 	$(CP) kernel/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
-	$(CP) lib/components/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 	$(CP) lib/gnade/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 
 clean: $(MODULES_CLEAN)
