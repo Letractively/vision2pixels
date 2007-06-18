@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                           Copyright (C) 2006                             --
+--                         Copyright (C) 2006-2007                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -47,10 +47,11 @@ package Image.Data is
      (Exceed_Max_Image_Dimension, Exceed_Max_Size, Image_Created);
 
    procedure Init
-      (Img      : in out Image_Data;
-       Filename : in     String);
+     (Img      : in out Image_Data;
+      Root_Dir : in     String;
+      Filename : in     String);
    --  Set image filename, read image info and create thumbnail
-   --  Generate image and thumb filename
+   --  Generate image and thumb filename under Root_Dir.
 
    procedure Init
      (Img                    : in out Image_Data;
