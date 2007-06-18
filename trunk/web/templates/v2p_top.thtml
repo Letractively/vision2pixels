@@ -13,21 +13,22 @@
     @@INCLUDE@@ import_css.thtml
     @@INCLUDE@@ ../we_js/aws.tjs
     @@IF@@ @_$2_@ = "forum_post_page"
-    @@--  This google key works only for http://localhost:8080
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAbXnh4fBA_Kpf2wc2hparDhTwM0brOpm-All5BF6PoaKBxRWWERRHyTAsPEdNO7iQYYi_d1dpblL7jw"
+    @@--  This google key works only for http://127.0.0.10:8080
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAbXnh4fBA_Kpf2wc2hparDhR4WN9nhhC3FDZFKFfdWmUUvCh7cRSW8b0ArdMGZxnSR74CYHIbQ1SXxA"
             type="text/javascript"></script>
     @@END_IF@@
     <script src="/we_js/v2p.tjs" type="text/javascript"></script>
   </head>
 
   <body class="@_$2_@
-    @@IF@@ @_$2_@ =  forum_post_page
-    onunload="GUnload()"
-    @@END_IF@@
     @@IF@@ @_Current_FID_@ /= ""
     fc_@_Current_FID_@
     @@END_IF@@
-    "> @@-- body is closed in v2p_end.thtml
+    "
+    @@IF@@ @_$2_@ =  forum_post_page
+    onunload="GUnload()"
+    @@END_IF@@
+    > @@-- body is closed in v2p_end.thtml
 
     <div id="CTX_ECWF" style="display:none">@_CTX_ECWF_@</div>
     <div id="quick_login">@_LAZY_QUICK_LOGIN_@<div id="login" style="display:none">@_LAZY_LOGIN_@</div></div>
