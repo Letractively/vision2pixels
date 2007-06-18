@@ -80,4 +80,10 @@ project Web_Test is
       end case;
    end Linker;
 
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide renames Shared.Ide;
+
 end Web_Test;

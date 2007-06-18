@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                           Copyright (C) 2006                             --
---                      Olivier Ramonat - Pascal Obry                       --
+--                         Copyright (C) 2006-2007                          --
+--                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
 --  it under the terms of the GNU General Public License as published by    --
@@ -48,6 +48,10 @@ project GNADE is
    Release_Options :=
      ("-O2");
 
+   --------------
+   -- Compiler --
+   --------------
+
    package Compiler is
 
       case Shared.Build is
@@ -59,5 +63,11 @@ project GNADE is
       end case;
 
    end Compiler;
+
+   ---------
+   -- Ide --
+   ---------
+
+   package Ide renames Shared.Ide;
 
 end GNADE;
