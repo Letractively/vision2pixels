@@ -38,7 +38,8 @@ package body Settings is
       Anonymous_Visit_Counter, Anonymous_Comment, Descending_Order,
       Ignore_Author_Click, Limit_Image_Size, Image_Maximum_Width,
       Image_Maximum_Height, Image_Maximum_Size, Thumbnail_Maximum_Width,
-      Thumbnail_Maximum_Height, Virtual_Host, Wiki_Service_Name);
+      Thumbnail_Maximum_Height, Virtual_Host, Website_Data_Path,
+      Website_Data_Prefix, Wiki_Service_Name);
 
    package Conf is new Morzhol.Iniparser (Attributes);
 
@@ -198,6 +199,24 @@ package body Settings is
    end Virtual_Host;
 
    -----------------------
+   -- Website_Data_Path --
+   -----------------------
+
+   function Website_Data_Path return String is
+   begin
+      return Conf.Get_Value (Website_Data_Path);
+   end Website_Data_Path;
+
+   -------------------------
+   -- Website_Data_Prefix --
+   -------------------------
+
+   function Website_Data_Prefix return String is
+   begin
+      return Conf.Get_Value (Website_Data_Prefix);
+   end Website_Data_Prefix;
+
+   -----------------------
    -- Wiki_Service_Name --
    -----------------------
 
@@ -227,6 +246,8 @@ begin
    Conf.Set_Value (Thumbnail_Maximum_Height,
                    Defaults.Thumbnail_Maximum_Height);
    Conf.Set_Value (Virtual_Host, Defaults.Virtual_Host);
+   Conf.Set_Value (Website_Data_Path, Defaults.Website_Data_Path);
+   Conf.Set_Value (Website_Data_Prefix, Defaults.Website_Data_Prefix);
    Conf.Set_Value (Wiki_Service_Name, Defaults.Wiki_Service_Name);
 
    --  Now read the config file if any
