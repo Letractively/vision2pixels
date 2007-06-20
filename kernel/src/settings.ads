@@ -75,6 +75,12 @@ package Settings is
    function Virtual_Host return String;
    --  Returns v2p virtual host
 
+   function Website_Data_Path return String;
+   --  Returns website data path
+
+   function Website_Data_Prefix return String;
+   --  Returns website data prefix
+
    function Wiki_Service_Name return String;
    --  Gwiad wiki service plugin name
 

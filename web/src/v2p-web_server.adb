@@ -97,6 +97,9 @@ package body V2P.Web_Server is
      (Request : in Status.Data) return Response.Data;
    --  Default callback
 
+   function Website_Data (Request : in Status.Data) return Response.Data;
+   --  Website data (images, ...) callback
+
    function WEJS_Callback (Request : in Status.Data) return Response.Data;
    --  Web Element JavaScript callback
 
@@ -952,6 +955,12 @@ package body V2P.Web_Server is
          Action => Dispatchers.Callback.Create (Thumbs_Callback'Access),
          Prefix => True);
 
+      Services.Dispatchers.URI.Register
+        (Dispatcher => Main_Dispatcher,
+         URI        => Settings.Website_Data_Prefix,
+         Action     => Dispatchers.Callback.Create (Website_Data'Access),
+         Prefix     => True);
+
       Services.Dispatchers.URI.Register_Default_Callback
         (Main_Dispatcher,
          Dispatchers.Callback.Create (Default_Callback'Access));
@@ -1077,6 +1086,22 @@ package body V2P.Web_Server is
    begin
       Gwiad.Web.Register.Virtual_Host.Unregister (Settings.Virtual_Host);
    end Unregister;
+
+   ------------------
+   -- Website_Data --
+   ------------------
+
+   function Website_Data (Request : in Status.Data) return Response.Data is
+      URI          : constant String := Status.URI (Request);
+      File         : constant String
+        := Gwiad_Plugin_Path & Directory_Separator & Settings.Website_Data_Path
+          & Directory_Separator
+          & URI (URI'First +
+                   Settings.Website_Data_Prefix'Length + 1 .. URI'Last);
+   begin
+      return Response.File (Content_Type  => MIME.Content_Type (File),
+                            Filename      => File);
+   end Website_Data;
 
    -------------------
    -- WEJS_Callback --
