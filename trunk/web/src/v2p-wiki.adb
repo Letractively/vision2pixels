@@ -25,17 +25,23 @@ with Ada.Exceptions;
 with Settings;
 
 with Wiki_Interface;
+with Gwiad.Registry.Services.Cache;
 with Gwiad.Registry.Services.Register;
 
 package body V2P.Wiki is
 
    use Ada;
+   use Gwiad.Registry.Services.Cache;
    use Gwiad.Registry.Services.Register;
 
-   Wiki_Id : Service_Id := Null_Service_Id;
+   Wiki_Id : Service_Id;
+   Has_Service : Boolean := False;
 
    function Get return Wiki_Interface.GW_Service'Class;
    --  Returns the service
+
+   function Wiki_Service_Name return Service_Name;
+   --  Returns the service name that provide wiki service
 
    ---------
    -- Get --
@@ -46,10 +52,10 @@ package body V2P.Wiki is
       use Wiki_Interface;
    begin
 
-      if Wiki_Id = Null_Service_Id then
+      if not Has_Service then
          declare
             Wiki_World_Service_Access : constant GW_Service_Access
-              := GW_Service_Access (Get (Settings.Wiki_Service_Name));
+              := GW_Service_Access (Get (Wiki_Service_Name));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
@@ -60,18 +66,17 @@ package body V2P.Wiki is
                Img_Base_URL   => Settings.Images_Source_Prefix,
                Text_Directory => "");
 
-            Wiki_Id := Set (Settings.Wiki_Service_Name,
+            Wiki_Id := Set (Wiki_Service_Name,
                             Gwiad.Registry.Services.Service_Access
                               (Wiki_World_Service_Access));
 
+            Has_Service := True;
             return Get_Service;
          end;
       else
          declare
             Wiki_World_Service_Access : constant GW_Service_Access :=
-                                          GW_Service_Access
-                                            (Get (Settings.Wiki_Service_Name,
-                                                  Wiki_Id));
+                                          GW_Service_Access (Get (Wiki_Id));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
@@ -84,6 +89,15 @@ package body V2P.Wiki is
          raise;
    end Get;
 
+   -----------------------
+   -- Wiki_Service_Name --
+   -----------------------
+
+   function Wiki_Service_Name return Service_Name is
+   begin
+      return Service_Name (Settings.Wiki_Service_Name);
+   end Wiki_Service_Name;
+
    ------------------
    -- Wiki_To_HTML --
    ------------------
@@ -91,7 +105,7 @@ package body V2P.Wiki is
    function Wiki_To_HTML (S : in String) return String is
    begin
 
-      if not Exists (Settings.Wiki_Service_Name) then
+      if not Exists (Wiki_Service_Name) then
          return "";
       end if;
 

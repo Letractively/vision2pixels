@@ -68,14 +68,18 @@ with V2P.Wiki;
 with Image.Data;
 with Image.Metadata.Geographic;
 with Settings;
-use AWS.Services.ECWF.Registry;
+
+with Gwiad.Registry.Websites;
 
 package body V2P.Web_Server is
 
-   use AWS;
    use Ada;
+   use AWS;
 
    use Morzhol.OS;
+
+   use AWS.Services.ECWF.Registry;
+   use Gwiad.Registry.Websites;
 
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
 
@@ -84,6 +88,9 @@ package body V2P.Web_Server is
    XML_Prefix_URI   : constant String := "/xml_";
    CSS_URI          : constant String := "/css";
    Web_JS_URI       : constant String := "/we_js";
+
+   V2p_Lib_Path     : constant String :=
+                        Gwiad.Registry.Websites.Register.Library_Path;
 
    -------------------------
    --  Standard Callbacks --
@@ -195,7 +202,7 @@ package body V2P.Web_Server is
    --  Gwiad  --
    -------------
 
-   procedure Unregister (Name : in String);
+   procedure Unregister (Name : in Website_Name);
    --  Unregister website
 
    --------------------------
@@ -1081,7 +1088,7 @@ package body V2P.Web_Server is
    -- Unregister --
    ----------------
 
-   procedure Unregister (Name : in String) is
+   procedure Unregister (Name : in Website_Name) is
       pragma Unreferenced (Name);
    begin
       Gwiad.Web.Register.Virtual_Host.Unregister (Settings.Virtual_Host);
@@ -1128,5 +1135,6 @@ begin
    Gwiad.Registry.Websites.Register.Register
      (Name        => "vision2pixels",
       Description => "a Web space engine to comment user's photos",
-      Unregister  => Unregister'Access);
+      Unregister  => Unregister'Access,
+     Library_Path => V2p_Lib_Path);
 end V2P.Web_Server;
