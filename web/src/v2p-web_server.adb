@@ -31,7 +31,7 @@ with AWS.Session;
 with AWS.Status;
 with AWS.Templates;
 
-with Gwiad.Web.Register.Virtual_Host;
+with Gwiad.Web.Virtual_Host;
 with Gwiad.Registry.Websites.Register;
 with Morzhol.OS;
 
@@ -1091,7 +1091,7 @@ package body V2P.Web_Server is
    procedure Unregister (Name : in Website_Name) is
       pragma Unreferenced (Name);
    begin
-      Gwiad.Web.Register.Virtual_Host.Unregister (Settings.Virtual_Host);
+      Gwiad.Web.Virtual_Host.Unregister (Settings.Virtual_Host);
    end Unregister;
 
    ------------------
@@ -1128,7 +1128,7 @@ package body V2P.Web_Server is
 begin
    Start;
 
-   Gwiad.Web.Register.Virtual_Host.Register
+   Gwiad.Web.Virtual_Host.Register
      (Hostname => Settings.Virtual_Host,
       Action   => Main_Dispatcher);
 
