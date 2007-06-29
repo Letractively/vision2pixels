@@ -19,9 +19,6 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AUnit.Test_Cases.Registration;
-with AUnit.Assertions;
-
 with Image.Metadata.Geographic;
 
 package body Image_Tests.Metadata is
@@ -113,10 +110,10 @@ package body Image_Tests.Metadata is
    -- Name --
    ----------
 
-   function Name (T : Test_Case) return String_Access is
+   function Name (T : Test_Case) return Message_String is
       pragma Unreferenced (T);
    begin
-      return new String'("Check image metadata functions");
+      return New_String ("Check image metadata functions");
    end Name;
 
    --------------------

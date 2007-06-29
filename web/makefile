@@ -64,7 +64,7 @@ install: install-dir
 	$(CP) templates/*.txml $(INSTALL)/templates
 	$(CP) we_js/*js $(INSTALL)/we_js
 	$(CP) xml/*xml $(INSTALL)/xml
-	$(CP) lib/vision2pixels$(SHEXT) $(INSTALL)/bin
+	$(CP) lib/libvision2pixels$(SOEXT) $(INSTALL)/bin
 
 clean:
 	-$(RM) -r gen src/v2p-template_defs*
@@ -84,7 +84,7 @@ install_tests:
 
 run_tests:
 	(cd $(INSTALL_TESTS); bin/web_harness > $(LOGFILE))
-	grep "Failed Tests" $(LOGFILE) >> $(LOG)
-	grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
+	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
+	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
 
 runtests: setup_tests install_tests run_tests

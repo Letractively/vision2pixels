@@ -19,9 +19,6 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AUnit.Test_Cases.Registration;
-with AUnit.Assertions;
-
 with Ada.Calendar;
 with Ada.Directories;
 
@@ -58,16 +55,15 @@ package body Image_Tests.Thumbnails is
                           GNAT.Calendar.Time_IO.Image (Now, "%Y%m%d%H%M-");
       Thumb_Name      : constant String :=
                           Compose
-                            (Compose (Compose (Settings.Get_Thumbs_Path, Year),
-                             Filename_Prefix),
-                             S_Name);
+                            (Compose (Settings.Get_Thumbs_Path, Year),
+                             Filename_Prefix & S_Name);
       Test_Image    : Image.Data.Image_Data;
 
    begin
 
       --  Read image info and create thumbnail
 
-      Image.Data.Init (Img => Test_Image, Filename => S_Name);
+      Image.Data.Init (Img => Test_Image, Root_Dir => ".", Filename => S_Name);
 
       Assert (Test_Image.Init_Status = Image_Created,
               "Error. Test_Image has not been created");
@@ -81,10 +77,10 @@ package body Image_Tests.Thumbnails is
    -- Name --
    ----------
 
-   function Name (T : in Test_Case) return String_Access is
+   function Name (T : in Test_Case) return Message_String is
       pragma Unreferenced (T);
    begin
-      return new String'("Create image thumbnails");
+      return New_String ("Create image thumbnails");
    end Name;
 
    --------------------

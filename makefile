@@ -30,6 +30,9 @@ GWIAD_UNREGISTER_SCRIPT=$(GWIAD_ROOT)/scripts/unregister
 GWIAD_HOST=127.0.0.1:8080
 MODE=Debug
 
+GNAT_ROOT=$(dir $(shell which gnatls))
+GWIAD_INSTALL=$(GNAT_ROOT)../lib/gwiad
+
 ifeq ($(OS),Windows_NT)
 EXEXT=.exe
 SOEXT=.dll
@@ -50,7 +53,7 @@ OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 
 # Modules support
 
-MODULES = web image db
+MODULES = image db web
 
 MODULES_SETUP = ${MODULES:%=%_setup}
 
@@ -61,6 +64,10 @@ MODULES_RUNTESTS = ${MODULES:%=%_runtests}
 MODULES_INSTALL = ${MODULES:%=%_install}
 
 MODULES_CLEAN = ${MODULES:%=%_clean}
+
+# Set LD_LIBRARY_PATH or PATH on Windows
+
+export LD_LIBRARY_PATH=$(GWIAD_INSTALL)
 
 # Targets
 
