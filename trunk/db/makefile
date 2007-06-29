@@ -26,7 +26,7 @@
 LOGFILE := ${shell pwd}/test/db_harness.log.${shell date +%Y%m%d-%H%M%S}
 
 all:
-#	gnat make -XPRJ_BUILD=$(MODE) -Pdb_test
+	gnat make -XPRJ_BUILD=$(MODE) -Pdb_test
 
 setup install:
 
@@ -35,8 +35,8 @@ setup_tests:
 
 run_tests:
 	(cd test; ./db_harness > $(LOGFILE))
-	grep "Failed Tests" $(LOGFILE) >> $(LOG)
-	grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
+	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
+	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
 
 runtests: setup_tests run_tests
 

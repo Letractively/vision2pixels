@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                           Copyright (C) 2006                             --
+--                         Copyright (C) 2006-2007                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -21,7 +21,7 @@
 
 with Ada.Command_Line;
 
-with AUnit.Test_Runner;
+with AUnit;
 with Image_Suite;
 
 procedure Image_Harness is

@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------
 --                              Vision2Pixels                               --
 --                                                                          --
---                           Copyright (C) 2006                             --
+--                         Copyright (C) 2006-2007                          --
 --                      Pascal Obry - Olivier Ramonat                       --
 --                                                                          --
 --  This library is free software; you can redistribute it and/or modify    --
@@ -19,15 +19,14 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with AUnit.Test_Cases.Registration;
-with AUnit.Assertions;
+with Ada.Strings.Unbounded;
 
 with DB.SQLite;
 
 package body DB_Tests.User is
 
    use Ada;
-
+   use Ada.Strings.Unbounded;
    use AUnit.Test_Cases.Registration;
    use AUnit.Assertions;
 
@@ -42,10 +41,10 @@ package body DB_Tests.User is
    -- Name --
    ----------
 
-   function Name (T : in Test_Case) return String_Access is
+   function Name (T : in Test_Case) return Message_String is
       pragma Unreferenced (T);
    begin
-      return new String'("Simple user table test");
+      return New_String ("Simple user table test");
    end Name;
 
    --------------------
