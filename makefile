@@ -97,6 +97,7 @@ install_gwiad_plugin:
 		$(GWIAD_ROOT)/lib/websites/libvision2pixels$(SOEXT)
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/templates/
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/xml
+	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/web_data
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/we_js
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css
 	mkdir -p $(GWIAD_ROOT)/plugins/vision2pixels/css/img

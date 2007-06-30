@@ -25,14 +25,14 @@ with Ada.Exceptions;
 with Settings;
 
 with Wiki_Interface;
-with Gwiad.Registry.Services.Cache;
-with Gwiad.Registry.Services.Register;
+with Gwiad.Plugins.Services.Cache;
+with Gwiad.Plugins.Services.Registry;
 
 package body V2P.Wiki is
 
    use Ada;
-   use Gwiad.Registry.Services.Cache;
-   use Gwiad.Registry.Services.Register;
+   use Gwiad.Plugins.Services.Cache;
+   use Gwiad.Plugins.Services.Registry;
 
    Wiki_Id : Service_Id;
    Has_Service : Boolean := False;
@@ -67,7 +67,7 @@ package body V2P.Wiki is
                Text_Directory => "");
 
             Wiki_Id := Set (Wiki_Service_Name,
-                            Gwiad.Registry.Services.Service_Access
+                            Gwiad.Plugins.Services.Service_Access
                               (Wiki_World_Service_Access));
 
             Has_Service := True;
