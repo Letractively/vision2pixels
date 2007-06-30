@@ -32,7 +32,7 @@ with AWS.Status;
 with AWS.Templates;
 
 with Gwiad.Web.Virtual_Host;
-with Gwiad.Registry.Websites.Register;
+with Gwiad.Plugins.Websites.Registry;
 with Morzhol.OS;
 
 with V2P.Database;
@@ -69,7 +69,7 @@ with Image.Data;
 with Image.Metadata.Geographic;
 with Settings;
 
-with Gwiad.Registry.Websites;
+with Gwiad.Plugins.Websites;
 
 package body V2P.Web_Server is
 
@@ -79,7 +79,7 @@ package body V2P.Web_Server is
    use Morzhol.OS;
 
    use AWS.Services.ECWF.Registry;
-   use Gwiad.Registry.Websites;
+   use Gwiad.Plugins.Websites;
 
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
 
@@ -90,7 +90,7 @@ package body V2P.Web_Server is
    Web_JS_URI       : constant String := "/we_js";
 
    V2p_Lib_Path     : constant String :=
-                        Gwiad.Registry.Websites.Register.Library_Path;
+                        Gwiad.Plugins.Websites.Registry.Library_Path;
 
    -------------------------
    --  Standard Callbacks --
@@ -1132,7 +1132,7 @@ begin
      (Hostname => Settings.Virtual_Host,
       Action   => Main_Dispatcher);
 
-   Gwiad.Registry.Websites.Register.Register
+   Gwiad.Plugins.Websites.Registry.Register
      (Name        => "vision2pixels",
       Description => "a Web space engine to comment user's photos",
       Unregister  => Unregister'Access,

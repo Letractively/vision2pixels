@@ -22,8 +22,8 @@
 with "aws";
 with "morzhol";
 
-with "gwiad-registry-services";
-with "gwiad-registry-websites";
+with "gwiad-plugins-services";
+with "gwiad-plugins-websites";
 with "gwiad-web";
 with "gwiad-ecwf";
 
