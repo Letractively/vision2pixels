@@ -24,6 +24,8 @@
 with Ada.Text_IO;
 with AUnit;
 
+with Gwiad.Web;
+with Gwiad.Plugins.Websites.Registry;
 with V2P.Web_Server;
 
 with Web_Suite;
@@ -31,40 +33,28 @@ with Web_Suite;
 procedure Web_Harness is
 
    use Ada;
+   use Gwiad;
 
    procedure Run is new AUnit.Test_Runner (Web_Suite);
-
-   task Server is
-      entry Started;
-   end Server;
-
-   ------------
-   -- Server --
-   ------------
-
-   task body Server is
-   begin
-      V2P.Web_Server.Start;
-      accept Started;
-   exception
-      when E : others =>
-         Text_IO.Put_Line ("Server failed to start...");
-   end Server;
 
 begin
    Text_IO.Put_Line ("(web_harness): Begin");
 
+   Plugins.Websites.Registry.Register
+     (Library_Path => "lib/websites/vision2pixels.so");
+
    Text_IO.Put_Line ("(web_harness): Start server");
-   Server.Started;
+
+   Web.Start;
 
    --  Run tests
 
    Text_IO.Put_Line ("(web_harness): run tests");
    Run;
 
-   --  Stop server
+   --  Exit now
 
---     V2P.Web_Server.Stop;
+   Web.Stop;
 
    Text_IO.Put_Line ("(web_harness): End");
 end Web_Harness;
