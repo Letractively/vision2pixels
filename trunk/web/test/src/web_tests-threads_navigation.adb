@@ -167,8 +167,7 @@ package body Web_Tests.Threads_Navigation is
           +"TID=79", +"Entre deux eaux", +"Macro/Animaux",
           +"TID=78", +"Envie de sport", +"Paysage",
           +"TID=77", +"Oeuf", +"Nature morte",
-          +"TID=76", +"Couché de soleil", +"Paysage",
-          +"</ul></div></div>"),
+          +"TID=76", +"Couché de soleil", +"Paysage"),
          "wrong set of images in thread FID=1 (all posts)");
 
       --  Today posts
