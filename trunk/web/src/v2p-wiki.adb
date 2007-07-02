@@ -54,7 +54,7 @@ package body V2P.Wiki is
 
       if not Has_Service then
          declare
-            Wiki_World_Service_Access : constant GW_Service_Access
+            Wiki_World_Service_Access : constant not null GW_Service_Access
               := GW_Service_Access (Get (Wiki_Service_Name));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
@@ -75,7 +75,7 @@ package body V2P.Wiki is
          end;
       else
          declare
-            Wiki_World_Service_Access : constant GW_Service_Access :=
+            Wiki_World_Service_Access : constant not null GW_Service_Access :=
                                           GW_Service_Access (Get (Wiki_Id));
             Get_Service               : GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
