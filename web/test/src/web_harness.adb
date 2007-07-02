@@ -25,7 +25,7 @@ with Ada.Text_IO;
 with AUnit;
 
 with Gwiad.Web;
-with Gwiad.Plugins.Websites.Registry;
+with Gwiad.Dynamic_Libraries.Manager;
 with V2P.Web_Server;
 
 with Web_Suite;
@@ -34,14 +34,14 @@ procedure Web_Harness is
 
    use Ada;
    use Gwiad;
+   use Gwiad.Dynamic_Libraries.Manager;
 
    procedure Run is new AUnit.Test_Runner (Web_Suite);
 
 begin
    Text_IO.Put_Line ("(web_harness): Begin");
 
-   Plugins.Websites.Registry.Register
-     (Library_Path => "lib/websites/vision2pixels.so");
+   Manager.Discover_Libraries;
 
    Text_IO.Put_Line ("(web_harness): Start server");
 
