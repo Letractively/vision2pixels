@@ -43,9 +43,10 @@ package body Image.Data is
 
    function Default_Max_Dimension return Image_Dimension is
    begin
-      return (Image_Size_T (Settings.Image_Maximum_Width),
-              Image_Size_T (Settings.Image_Maximum_Height),
-              File_Size (Settings.Image_Maximum_Size));
+      return Image_Dimension'
+        (Width  => Image_Size_T (Settings.Image_Maximum_Width),
+         Height => Image_Size_T (Settings.Image_Maximum_Height),
+         Size   => File_Size (Settings.Image_Maximum_Size));
    end Default_Max_Dimension;
 
    ---------------
@@ -93,9 +94,9 @@ package body Image.Data is
    is
       Thumb           : Image_Ptr;
       Thumb_Info      : Image_Info_Ptr;
-      Thumb_Size      : constant G2F.IO.Image_Size :=
-                          (Image_Size_T (Settings.Thumbnail_Maximum_Width),
-                           Image_Size_T (Settings.Thumbnail_Maximum_Height));
+      Thumb_Size      : constant G2F.IO.Image_Size
+        := Image_Size'(X => Image_Size_T (Settings.Thumbnail_Maximum_Width),
+                       Y => Image_Size_T (Settings.Thumbnail_Maximum_Height));
    begin
       --  Read image info
 
@@ -108,7 +109,10 @@ package body Image.Data is
          declare
             Dim : constant Image_Size := Get_Image_Size (Img.Image_Ptr);
          begin
-            Img.Dimension := (Dim.X, Dim.Y, Size (Original_Filename));
+            Img.Dimension := Image_Dimension'
+              (Width  => Dim.X,
+               Height => Dim.Y,
+               Size   => Size (Original_Filename));
 
             if Natural (Img.Dimension.Width) >  Settings.Image_Maximum_Width
               or else

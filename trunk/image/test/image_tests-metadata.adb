@@ -110,7 +110,7 @@ package body Image_Tests.Metadata is
    -- Name --
    ----------
 
-   function Name (T : Test_Case) return Message_String is
+   function Name (T : in Test_Case) return Message_String is
       pragma Unreferenced (T);
    begin
       return New_String ("Check image metadata functions");

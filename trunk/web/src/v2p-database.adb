@@ -60,7 +60,7 @@ package body V2P.Database is
       Connected : Boolean;
    end record;
 
-   Null_DBH : constant TLS_DBH := (null, False);
+   Null_DBH : constant TLS_DBH := TLS_DBH'(Handle => null, Connected => False);
 
    package DBH_TLS is new Task_Attributes (TLS_DBH, Null_DBH);
 
@@ -442,7 +442,7 @@ package body V2P.Database is
       if Iter.More then
          Iter.Get_Line (Line);
 
-         Exif :=
+         Exif := Image.Metadata.Embedded.Data'
            (Create_Date         => +DB.String_Vectors.Element (Line, 1),
             Make                => +DB.String_Vectors.Element (Line, 2),
             Camera_Model_Name   => +DB.String_Vectors.Element (Line, 3),
@@ -710,6 +710,7 @@ package body V2P.Database is
 
    begin
       Navigation := Post_Ids.Empty_Vector;
+      Set        := Templates.Null_Set;
 
       Connect (DBH);
 

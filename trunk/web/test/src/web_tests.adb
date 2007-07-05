@@ -30,31 +30,21 @@ with AWS.Utils;
 package body Web_Tests is
 
    use Ada;
-   use Ada.Strings.Fixed;
-   use AUnit;
-   use AUnit.Assertions;
 
    function "-"
      (Str : in Unbounded_String)
       return String
       renames To_String;
 
-   procedure Log (Str : in String; Message : in String);
-   --  Add Str into the log with the message decription as header
-
    Log_File : Text_IO.File_Type;
-
-   function Is_Not (Word : in String) return Boolean;
-   --  Returns True if Word contains the not operator
-
-   function Get (Word : in Word_Set; K : in Positive) return String;
-   --  Returns Word (k) (skip the not operator if present)
 
    type Coding is record
       From, To : Unbounded_String;
    end record;
 
-   Coding_Rules : array (1 .. 30) of Coding;
+   type Coding_Array is array (1 .. 30) of Coding;
+
+   Coding_Rules : Coding_Array;
 
    -----------
    -- "not" --
@@ -74,9 +64,61 @@ package body Web_Tests is
       Word    : in Word_Set;
       Message : in String)
    is
+      use AUnit;
+      use AUnit.Assertions;
+
+      function Get (Word : in Word_Set; K : in Positive) return String;
+      --  Returns Word (k) (skip the not operator if present)
+
+      function Is_Not (Word : in String) return Boolean;
+      --  Returns True if Word contains the not operator
+
+      procedure Log (Str : in String; Message : in String);
+      --  Add Str into the log with the message decription as header
+
+      ---------
+      -- Get --
+      ---------
+
+      function Get (Word : in Word_Set; K : in Positive) return String is
+         W : constant String := -Word (K);
+      begin
+         if W'Length >= 5 and then W (W'First .. W'First + 4) = "(not)" then
+            return W (W'First + 5 .. W'Last);
+         end if;
+         return W;
+      end Get;
+
+      ------------
+      -- Is_Not --
+      ------------
+
+      function Is_Not (Word : in String) return Boolean is
+         Result : Boolean := False;
+      begin
+         if Word'Length >= 5
+           and then Word (Word'First .. Word'First + 4) = "(not)"
+         then
+            Result := True;
+         end if;
+         return Result;
+      end Is_Not;
+
+      ---------
+      -- Log --
+      ---------
+
+      procedure Log (Str : in String; Message : in String) is
+      begin
+         Text_IO.Put_Line (Log_File, "----------------------------------");
+         Text_IO.Put_Line (Log_File, ">>> " & Message);
+         Text_IO.Put_Line (Log_File, Str);
+         Text_IO.New_Line (Log_File);
+      end Log;
+
       E_Page : Unbounded_String := +Page;
       Status : Boolean := True;
-      P, Tmp : Natural;
+      P      : Natural := 1;
       Len, I : Natural;
    begin
       --  First apply all the encoding rules to the Web page
@@ -98,11 +140,13 @@ package body Web_Tests is
 
       --  Check the page now
 
-      P := 1;
       Len := Length (E_Page);
 
+      Check_Status_Page :
       for K in Word'Range loop
          declare
+            use Ada.Strings.Fixed;
+            Tmp : Natural;
             W : constant String := Get (Word, K);
          begin
             Tmp := Index (Slice (E_Page, P, Len), W);
@@ -126,7 +170,7 @@ package body Web_Tests is
          end;
 
          exit when P > Len;
-      end loop;
+      end loop Check_Status_Page;
 
       if not Status then
          Log (To_String (E_Page),
@@ -136,20 +180,6 @@ package body Web_Tests is
 
       Assert (Status, Message);
    end Check;
-
-   ---------
-   -- Get --
-   ---------
-
-   function Get (Word : in Word_Set; K : in Positive) return String is
-      W : constant String := -Word (K);
-   begin
-      if W'Length >= 5 and then W (W'First .. W'First + 4) = "(not)" then
-         return W (W'First + 5 .. W'Last);
-      else
-         return W;
-      end if;
-   end Get;
 
    function Get
      (Page, Regpat : in String; Index : in Positive) return String
@@ -162,41 +192,13 @@ package body Web_Tests is
 
       if Matches (Index) = No_Match then
          return "";
-      else
-         return Page (Matches (Index).First .. Matches (Index).Last);
       end if;
+      return Page (Matches (Index).First .. Matches (Index).Last);
    end Get;
 
-   ------------
-   -- Is_Not --
-   ------------
-
-   function Is_Not (Word : in String) return Boolean is
-   begin
-      if Word'Length >= 5
-        and then Word (Word'First .. Word'First + 4) = "(not)"
-      then
-         return True;
-      else
-         return False;
-      end if;
-   end Is_Not;
-
-   ---------
-   -- Log --
-   ---------
-
-   procedure Log (Str : in String; Message : in String) is
-   begin
-      Text_IO.Put_Line (Log_File, "----------------------------------");
-      Text_IO.Put_Line (Log_File, ">>> " & Message);
-      Text_IO.Put_Line (Log_File, Str);
-      Text_IO.New_Line (Log_File);
-   end Log;
-
-begin
+begin --  Web_Tests : Initialization
    Coding_Rules :=
-     ((+"&eacute;", +"é"),
+     Coding_Array'((+"&eacute;", +"é"),
       (+"&egrave;", +"è"),
       (+"&ecirc;", +"ê"),
       (+"&euml;", +"ë"),

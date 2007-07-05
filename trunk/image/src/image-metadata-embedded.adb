@@ -24,8 +24,10 @@
 
 with GNAT.Expect;
 with GNAT.Regpat;
+with GNAT.OS_Lib;
 
 with Morzhol.OS;
+
 
 package body Image.Metadata.Embedded is
 
@@ -58,19 +60,19 @@ package body Image.Metadata.Embedded is
    --  Note that the pattern order in Regpat_Array is important as it must
    --  match the output of the exiftool.
 
-   Regpat_Array        : constant Expect.Regexp_Array :=
-                           (Make'Access,
-                            Camera_Model_Name'Access,
-                            Shutter_Speed_Value'Access,
-                            Aperture_Value'Access,
-                            Exposure_Program'Access,
-                            ISO'Access,
-                            Create_Date'Access,
-                            Metering_Mode'Access,
-                            Flash'Access,
-                            Focal_Length'Access,
-                            Exposure_Mode'Access,
-                            White_Balance'Access);
+   Regpat_Array        : constant Expect.Regexp_Array
+     := Expect.Regexp_Array'(1 => Make'Access,
+                             2 => Camera_Model_Name'Access,
+                             3 => Shutter_Speed_Value'Access,
+                             4 => Aperture_Value'Access,
+                             5 => Exposure_Program'Access,
+                             6 => ISO'Access,
+                             7 => Create_Date'Access,
+                             8 => Metering_Mode'Access,
+                             9 => Flash'Access,
+                             10 => Focal_Length'Access,
+                             11 => Exposure_Mode'Access,
+                             12 => White_Balance'Access);
 
    ---------
    -- Get --
@@ -103,15 +105,16 @@ package body Image.Metadata.Embedded is
          if Is_Windows then
             Expect.Non_Blocking_Spawn
               (Pd, Cmd,
-               (1 => Cmd_Option'Access,
-                2 => Sh_Option'Access,
-                3 => Exiftool'Access,
-                4 => Exiftool_Opt'Access,
-                5 => File'Unchecked_Access));
+               OS_Lib.Argument_List'(1 => Cmd_Option'Access,
+                                     2 => Sh_Option'Access,
+                                     3 => Exiftool'Access,
+                                     4 => Exiftool_Opt'Access,
+                                     5 => File'Unchecked_Access));
          else
             Expect.Non_Blocking_Spawn
               (Pd, Exiftool,
-               (1 => Exiftool_Opt'Access, 2 => File'Unchecked_Access));
+               OS_Lib.Argument_List'(1 => Exiftool_Opt'Access,
+                                     2 => File'Unchecked_Access));
          end if;
       exception
          when Expect.Invalid_Process =>
