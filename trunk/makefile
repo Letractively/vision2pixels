@@ -44,12 +44,13 @@ endif
 CP=cp -p
 MKDIR=mkdir -p
 RM=rm -f
+GNATMAKE=gnatmake
 
 LOG := ${shell pwd}/log.${shell date +%Y%m%d-%H%M%S}
 
 OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 	CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" MAKE="$(MAKE)" \
-	LOG="$(LOG)" SOEXT="$(SOEXT)"
+	LOG="$(LOG)" SOEXT="$(SOEXT)" GNATMAKE="$(GNATMAKE)"
 
 # Modules support
 
@@ -58,6 +59,8 @@ MODULES = image db web
 MODULES_SETUP = ${MODULES:%=%_setup}
 
 MODULES_BUILD = ${MODULES:%=%_build}
+
+MODULES_CHECK = ${MODULES:%=%_check}
 
 MODULES_RUNTESTS = ${MODULES:%=%_runtests}
 
@@ -74,6 +77,9 @@ export LD_LIBRARY_PATH=$(GWIAD_INSTALL)
 all: $(MODULES_SETUP) $(MODULES_BUILD)
 
 setup: $(MODULES_SETUP)
+
+check: $(MODULES_CHECK)
+	gnat check -dd -Pkernel/kernel -rules -from=v2p.check
 
 init_tests:
 	-rm -f $(LOG)
@@ -121,6 +127,9 @@ install_gwiad_plugin:
 
 clean: $(MODULES_CLEAN)
 
+check_mem:
+	make check_mem -C web $(OPTIONS)
+
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
 
@@ -135,3 +144,6 @@ ${MODULES_INSTALL}:
 
 ${MODULES_CLEAN}:
 	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
+
+${MODULES_CHECK}:
+	${MAKE} -C ${@:%_check=%} check $(OPTIONS)

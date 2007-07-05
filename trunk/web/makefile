@@ -33,6 +33,11 @@ all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
 
+check:
+	gnat check -dd -Pweb -rules -from=../v2p.check
+	gnat check -dd -Pweb_test -rules -from=../v2p.check
+
+
 setup:
 	-$(MKDIR) gen
 	templates2ada -d templates/ -o gen/templates.cds \
@@ -97,3 +102,18 @@ run_tests:
 	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
 
 runtests: setup_tests install_tests run_tests
+
+check_mem: setup_tests install_tests
+	$(GNATMAKE) -Pcheck_mem
+	$(CP) test/bin/check_mem $(INSTALL_MAIN)/bin
+	(cd $(INSTALL_MAIN); \
+	echo "Here I am";\
+	rm -f check_mem.*; \
+	rm -f run1 run2; \
+	bin/check_mem 1 > check_mem.res\
+	gnatmem 3 -i gmem.out bin/check_mem > check_mem.run1;\
+	grep "   Final" check_mem.run1 > run1;\
+	echo ",  run it again";\
+	bin/check_mem 5 >> check_mem.res;\
+	gnatmem 3 -i gmem.out bin/check_mem > check_mem.run2;\
+	grep "   Final" check_mem.run2 > run2)

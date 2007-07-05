@@ -28,6 +28,11 @@ LOGFILE := ${shell pwd}/test/db_harness.log.${shell date +%Y%m%d-%H%M%S}
 all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pdb_test
 
+check:
+	gnat check -dd -Pdb -rules -from=../v2p.check
+	gnat check -dd -Pdb_test -rules -from=../v2p.check
+
+
 setup install:
 
 setup_tests:

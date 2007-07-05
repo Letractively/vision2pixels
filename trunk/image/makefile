@@ -28,6 +28,10 @@ LOGFILE := ${shell pwd}/test/image_harness.log.${shell date +%Y%m%d-%H%M%S}
 all:
 	gnat make -XPRJ_BUILD=$(MODE) -Pimage_test
 
+check:
+	gnat check -dd -Pimage -rules -from=../v2p.check
+	gnat check -dd -Pimage_test -rules -from=../v2p.check
+
 setup install:
 
 run_tests:
