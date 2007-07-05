@@ -709,8 +709,8 @@ package body V2P.Database is
       Select_Stmt     : Unbounded_String;
 
    begin
+
       Navigation := Post_Ids.Empty_Vector;
-      Set        := Templates.Null_Set;
 
       Connect (DBH);
 
