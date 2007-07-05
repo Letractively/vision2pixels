@@ -50,13 +50,14 @@ package body V2P.Wiki is
    function Get return Wiki_Interface.GW_Service'Class
    is
       use Wiki_Interface;
+
    begin
 
       if not Has_Service then
          declare
             Wiki_World_Service_Access : constant not null GW_Service_Access
               := GW_Service_Access (Get (Wiki_Service_Name));
-            Get_Service               : GW_Service'Class :=
+            Get_Service               : constant GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
             Initialize
@@ -77,7 +78,7 @@ package body V2P.Wiki is
          declare
             Wiki_World_Service_Access : constant not null GW_Service_Access :=
                                           GW_Service_Access (Get (Wiki_Id));
-            Get_Service               : GW_Service'Class :=
+            Get_Service               : constant GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
             return Get_Service;
@@ -110,7 +111,7 @@ package body V2P.Wiki is
       end if;
 
       declare
-         Get_Service : Wiki_Interface.GW_Service'Class := Get;
+         Get_Service : constant Wiki_Interface.GW_Service'Class := Get;
       begin
          return Wiki_Interface.HTML_Preview (Get_Service, S);
       end;

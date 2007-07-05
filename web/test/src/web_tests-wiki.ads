@@ -25,14 +25,13 @@ package Web_Tests.Wiki is
 
    use AUnit;
    use AUnit.Test_Cases;
-   use AUnit.Message_Strings;
 
    type Test_Case is new AUnit.Test_Cases.Test_Case with null record;
 
    procedure Register_Tests (T : in out Test_Case);
    --  Register routines to be run
 
-   function Name (T : in Test_Case) return Message_String;
+   function Name (T : in Test_Case) return Message_Strings.Message_String;
    --  Returns name identifying the test case
 
 end Web_Tests.Wiki;

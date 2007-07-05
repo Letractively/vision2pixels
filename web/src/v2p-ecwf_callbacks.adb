@@ -163,10 +163,7 @@ package body V2P.ECWF_Callbacks is
                   "ERROR"));
             Context.Remove
               (V2P.Template_Defs.Global.ERROR_METADATA_NULL_METADATA);
-            return;
-         end if;
-
-         if Context.Exist
+         elsif Context.Exist
            (V2P.Template_Defs.Global.ERROR_METADATA_UNKNOWN_PHOTO) then
             Templates.Insert
               (Translations,
@@ -175,12 +172,11 @@ package body V2P.ECWF_Callbacks is
                   "ERROR"));
             Context.Remove
               (V2P.Template_Defs.Global.ERROR_METADATA_UNKNOWN_PHOTO);
-            return;
+         else
+            Templates.Insert
+              (Translations,
+               Database.Get_Metadata (Context.Get_Value ("TID")));
          end if;
-
-         Templates.Insert
-           (Translations,
-            Database.Get_Metadata (Context.Get_Value ("TID")));
       end if;
    end Metadata;
 

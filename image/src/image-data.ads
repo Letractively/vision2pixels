@@ -75,7 +75,8 @@ package Image.Data is
 
 private
 
-   Null_Dimension : constant Image_Dimension := (0, 0, 0);
+   Null_Dimension : constant Image_Dimension :=
+                      Image_Dimension'(Width => 0, Height => 0, Size => 0);
 
    type Image_Data is new Finalization.Controlled with record
       Info_Ptr    : G2F.Image_Info_Ptr;

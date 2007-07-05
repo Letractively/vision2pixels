@@ -312,12 +312,12 @@ package body V2P.Web_Server is
 
       if Response.Status_Code (Web_Page) = Messages.S404 then
          --  Page not found
-         return Services.ECWF.Registry.Build
+         Web_Page := Services.ECWF.Registry.Build
            (Template_Defs.Error.URL, Request, Translations);
 
-      else
-         return Web_Page;
       end if;
+
+      return Web_Page;
    end Default_Callback;
 
    --------------------------
@@ -353,66 +353,63 @@ package body V2P.Web_Server is
 
       Context.Set_Value (Template_Defs.Global.TID, TID);
 
-      if TID = "" then
-         --  Page does not exit
-         return;
-      end if;
+      if TID /= "" then
+         Context_Filter (Context);
 
-      Context_Filter (Context);
-
-      if not Settings.Anonymous_Visit_Counter then
-         --  Do not count anonymous click
-         if Login = "" then
-            Count_Visit := False;
-
-         else
-            if Settings.Ignore_Author_Click
-              and then Database.Is_Author (Login, TID)
-            then
-               --  Do not count author click
+         if not Settings.Anonymous_Visit_Counter then
+            --  Do not count anonymous click
+            if Login = "" then
                Count_Visit := False;
+
+            else
+               if Settings.Ignore_Author_Click
+                 and then Database.Is_Author (Login, TID)
+               then
+                  --  Do not count author click
+                  Count_Visit := False;
+               end if;
             end if;
          end if;
-      end if;
 
-      if Count_Visit then
-         Database.Increment_Visit_Counter (TID);
-      end if;
-
-      --  Insert navigation links (previous and next post)
-
-      declare
-         Selected_Post : constant V2P.Context.Post_Ids.Vector :=
-                           V2P.Context.Navigation_Links.Get_Value
-                             (Context.all, "Navigation_Links");
-         Previous_Id   : constant String :=
-                           V2P.Context.Previous (Selected_Post, TID);
-         Next_Id       : constant String :=
-                           V2P.Context.Next (Selected_Post, TID);
-      begin
-         Templates.Insert
-           (Translations, Templates.Assoc
-              (V2P.Template_Defs.Forum_Entry.PREVIOUS, Previous_Id));
-
-         if Previous_Id /= "" then
-            Templates.Insert
-              (Translations, Templates.Assoc
-                 (V2P.Template_Defs.Forum_Entry.PREVIOUS_THUMB,
-                  Database.Get_Thumbnail (Previous_Id)));
+         if Count_Visit then
+            Database.Increment_Visit_Counter (TID);
          end if;
 
-         Templates.Insert
-           (Translations, Templates.Assoc
-              (V2P.Template_Defs.Forum_Entry.NEXT, Next_Id));
+         --  Insert navigation links (previous and next post)
 
-         if Next_Id /= "" then
+         declare
+            Selected_Post : constant V2P.Context.Post_Ids.Vector :=
+                              V2P.Context.Navigation_Links.Get_Value
+                                (Context.all, "Navigation_Links");
+            Previous_Id   : constant String :=
+                              V2P.Context.Previous (Selected_Post, TID);
+            Next_Id       : constant String :=
+                              V2P.Context.Next (Selected_Post, TID);
+         begin
             Templates.Insert
               (Translations, Templates.Assoc
-                 (V2P.Template_Defs.Forum_Entry.NEXT_THUMB,
-                  Database.Get_Thumbnail (Next_Id)));
-         end if;
-      end;
-      Templates.Insert (Translations, Database.Get_Entry (TID));
+                 (V2P.Template_Defs.Forum_Entry.PREVIOUS, Previous_Id));
+
+            if Previous_Id /= "" then
+               Templates.Insert
+                 (Translations, Templates.Assoc
+                    (V2P.Template_Defs.Forum_Entry.PREVIOUS_THUMB,
+                     Database.Get_Thumbnail (Previous_Id)));
+            end if;
+
+            Templates.Insert
+              (Translations, Templates.Assoc
+                 (V2P.Template_Defs.Forum_Entry.NEXT, Next_Id));
+
+            if Next_Id /= "" then
+               Templates.Insert
+                 (Translations, Templates.Assoc
+                    (V2P.Template_Defs.Forum_Entry.NEXT_THUMB,
+                     Database.Get_Thumbnail (Next_Id)));
+            end if;
+         end;
+         Templates.Insert (Translations, Database.Get_Entry (TID));
+      end if;
    end Forum_Entry_Callback;
 
    ----------------------------
@@ -467,13 +464,14 @@ package body V2P.Web_Server is
    ----------------------
 
    function Is_Valid_Comment (Comment : in String) return Boolean is
+      Is_Valid : Boolean := True;
    begin
       if Comment = "" then
          --  Does not accept empty comment
-         return False;
+         Is_Valid := False;
       end if;
 
-      return True;
+      return Is_Valid;
    end Is_Valid_Comment;
 
    --------------------
@@ -767,12 +765,12 @@ package body V2P.Web_Server is
 
       function Get (Parameter_Name : in String) return Geo_Coordinate is
          Param : constant String := Parameters.Get (P, Parameter_Name);
+         Coordinate : Geo_Coordinate := 0.0;
       begin
-         if Param = "" then
-            return 0.0;
-         else
-            return Geo_Coordinate'Value (Param);
+         if Param /= "" then
+            Coordinate := Geo_Coordinate'Value (Param);
          end if;
+         return Coordinate;
       end Get;
 
       Latitude_Coord      : constant Geo_Coordinate := Get
@@ -786,23 +784,20 @@ package body V2P.Web_Server is
       if Latitude_Coord = 0.0 or else Longitude_Coord = 0.0 then
          Context.Set_Value
            (V2P.Template_Defs.Global.ERROR_METADATA_NULL_METADATA, "ERROR");
-         return;
-
       elsif not Context.Exist (Template_Defs.Global.TID) then
          Context.Set_Value
            (V2P.Template_Defs.Global.ERROR_METADATA_UNKNOWN_PHOTO, "ERROR");
-         return;
+      else
+         Latitude_Position.Format (Latitude_Coord);
+         Longitude_Postition.Format (Longitude_Coord);
+
+         Database.Insert_Metadata
+           (Context.Get_Value (Template_Defs.Global.TID),
+            Float (Latitude_Coord),
+            Float (Longitude_Coord),
+            Image.Metadata.Geographic.Image (Latitude_Position),
+            Image.Metadata.Geographic.Image (Longitude_Postition));
       end if;
-
-      Latitude_Position.Format (Latitude_Coord);
-      Longitude_Postition.Format (Longitude_Coord);
-
-      Database.Insert_Metadata
-        (Context.Get_Value (Template_Defs.Global.TID),
-         Float (Latitude_Coord),
-         Float (Longitude_Coord),
-         Image.Metadata.Geographic.Image (Latitude_Position),
-         Image.Metadata.Geographic.Image (Longitude_Postition));
    end Onsubmit_Metadata_Form_Enter_Callback;
 
    ---------------------------------------
@@ -840,47 +835,49 @@ package body V2P.Web_Server is
               (Template_Defs.R_Block_Post_Form_Enter.ERROR,
                "POST SUBMIT ERROR"));
          --  ??? Adds an error message
-         return;
-
-      elsif Last_Name = Name then
-         Templates.Insert
-           (Translations,
-            Templates.Assoc
-              (Template_Defs.R_Block_Post_Form_Enter.ERROR_DUPLICATED,
-               "ERROR_DUPLICATE_POST"));
-
       else
-         declare
-            Post_Id : constant String :=
-                        Database.Insert_Post
-                          (Login, CID, Name, Comment_Wiki, Pid);
-         begin
-            if Post_Id /= "" then
-               --  Set new context TID (needed by
-               --  Onsubmit_Metadata_Form_Enter_Callback)
 
-               Context.Set_Value (Global.TID, Post_Id);
-               Context.Set_Value (Global.CONTEXT_LAST_POST_NAME, Name);
+         if Last_Name = Name then
+            Templates.Insert
+              (Translations,
+               Templates.Assoc
+                 (Template_Defs.R_Block_Post_Form_Enter.ERROR_DUPLICATED,
+                  "ERROR_DUPLICATE_POST"));
 
-               Templates.Insert
-                 (Translations,
-                  Templates.Assoc
-                    (R_Block_Post_Form_Enter.URL,
-                     Forum_Entry.URL & '?' &
-                     Forum_Entry.HTTP.TID & '=' & Post_Id));
+         else
+            declare
+               Post_Id : constant String :=
+                           Database.Insert_Post
+                             (Login, CID, Name, Comment_Wiki, Pid);
+            begin
+               if Post_Id /= "" then
+                  --  Set new context TID (needed by
+                  --  Onsubmit_Metadata_Form_Enter_Callback)
 
-            else
-               Templates.Insert
-                 (Translations,
-                  Templates.Assoc
-                    (R_Block_Post_Form_Enter.ERROR, "DATABASE INSERT FAILED"));
-            end if;
-         end;
-      end if;
+                  Context.Set_Value (Global.TID, Post_Id);
+                  Context.Set_Value (Global.CONTEXT_LAST_POST_NAME, Name);
 
-      if Pid /= "" and then Context.Exist (Global.TID) then
-         Onsubmit_Metadata_Form_Enter_Callback
-           (Request, Context, Translations);
+                  Templates.Insert
+                    (Translations,
+                     Templates.Assoc
+                       (R_Block_Post_Form_Enter.URL,
+                        Forum_Entry.URL & '?' &
+                        Forum_Entry.HTTP.TID & '=' & Post_Id));
+
+               else
+                  Templates.Insert
+                    (Translations,
+                     Templates.Assoc
+                       (R_Block_Post_Form_Enter.ERROR,
+                        "DATABASE INSERT FAILED"));
+               end if;
+            end;
+         end if;
+
+         if Pid /= "" and then Context.Exist (Global.TID) then
+            Onsubmit_Metadata_Form_Enter_Callback
+              (Request, Context, Translations);
+         end if;
       end if;
    end Onsubmit_Post_Form_Enter_Callback;
 
@@ -1125,7 +1122,7 @@ package body V2P.Web_Server is
          String'(Templates.Parse (File, Translations)));
    end WEJS_Callback;
 
-begin
+begin  -- V2P.Web_Server : register vision2pixels website
    Start;
 
    Gwiad.Web.Virtual_Host.Register
