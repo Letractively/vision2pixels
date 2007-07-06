@@ -77,6 +77,7 @@ install-dir:
 	-$(MKDIR) $(INSTALL_MAIN)/lib/services
 
 install: install-dir
+	$(RM) $(INSTALL_MAIN)/lib/websites/libvision2pixels$(SOEXT)
 	$(CP) lib/libvision2pixels$(SOEXT) $(INSTALL_MAIN)/lib/websites
 
 clean:
@@ -101,19 +102,22 @@ run_tests:
 	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
 	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
 
-runtests: setup_tests install_tests run_tests
+runtests: setup_tests install_tests #run_tests
 
 check_mem: setup_tests install_tests
 	$(GNATMAKE) -Pcheck_mem
 	$(CP) test/bin/check_mem $(INSTALL_MAIN)/bin
 	(cd $(INSTALL_MAIN); \
-	echo "Here I am";\
 	rm -f check_mem.*; \
 	rm -f run1 run2; \
-	bin/check_mem 1 > check_mem.res\
-	gnatmem 3 -i gmem.out bin/check_mem > check_mem.run1;\
+	echo "server_port 8043" > aws.ini;\
+	bin/check_mem 2 > check_mem.res;\
+	gnatmem 3 -i gmem.out bin/check_mem > check_mem.run1; \
 	grep "   Final" check_mem.run1 > run1;\
 	echo ",  run it again";\
-	bin/check_mem 5 >> check_mem.res;\
+	echo "server_port 8044" > aws.ini;\
+	bin/check_mem 10 >> check_mem.res;\
 	gnatmem 3 -i gmem.out bin/check_mem > check_mem.run2;\
-	grep "   Final" check_mem.run2 > run2)
+	grep "   Final" check_mem.run2 > run2;\
+	rm -f alldifs;\
+	$(DIFF) run1 run2 1>> alldifs 2>> alldifs)

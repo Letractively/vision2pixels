@@ -38,7 +38,13 @@ project Shared is
    -------------
 
    package Builder is
-      for Default_Switches ("Ada") use ("-m");
+      case Build is
+         when "Release" =>
+            for Default_Switches ("ada") use ("-m");
+         when "Debug" =>
+            for Default_Switches ("ada") use
+              ("-m", "-fprofile-arcs", "-ftest-coverage");
+      end case;
    end Builder;
 
    --------------
@@ -75,8 +81,8 @@ project Shared is
         use "style_checker -l75";
       for VCS_File_Check
         use "style_checker -ign tmplt -ign sed -ign txt"
-         & " -lang Ada -cp -cy -sp -gnat05"
-         & " -lang XML -l256";
+        & " -lang Ada -cp -cy -sp -gnat05"
+        & " -lang XML -l256";
    end Ide;
 
    ------------
@@ -101,7 +107,7 @@ project Shared is
       case Build is
          when "Debug" =>
             for Default_Switches ("Ada") use
-               ("-g", "-L" & ImageMagick_Lib, "-L" & Jpeg_Lib);
+               ("-g",  "-lgmem", "-L" & ImageMagick_Lib, "-L" & Jpeg_Lib);
 
          when "Release" =>
             for Default_Switches ("Ada") use

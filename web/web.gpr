@@ -58,9 +58,13 @@ project Web is
          --  ??? for linker library ordering
          for Library_Options use ("-laws", "-laws_win32", "-lws2_32");
       when others =>
-         null;
+         case Shared.Build is
+            when "Debug" =>
+               for Library_Options use ("-fprofile-arcs");
+            when "Release" =>
+               null;
+         end case;
    end case;
-
    -------------
    -- Builder --
    -------------
