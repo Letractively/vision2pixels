@@ -44,13 +44,15 @@ endif
 CP=cp -p
 MKDIR=mkdir -p
 RM=rm -f
+DIFF=diff
 GNATMAKE=gnatmake
 
 LOG := ${shell pwd}/log.${shell date +%Y%m%d-%H%M%S}
 
 OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 	CP="$(CP)" MKDIR="$(MKDIR)" RM="$(RM)" MAKE="$(MAKE)" \
-	LOG="$(LOG)" SOEXT="$(SOEXT)" GNATMAKE="$(GNATMAKE)"
+	LOG="$(LOG)" SOEXT="$(SOEXT)" GNATMAKE="$(GNATMAKE)" \
+	DIFF=$(DIFF)
 
 # Modules support
 
@@ -129,6 +131,9 @@ clean: $(MODULES_CLEAN)
 
 check_mem:
 	make check_mem -C web $(OPTIONS)
+
+gcov_analyse:
+	(cd web/obj/; gcov -abfu ../src/*; gcov -abfu ../tsrc/*)
 
 ${MODULES_SETUP}:
 	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)

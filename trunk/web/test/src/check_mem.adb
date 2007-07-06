@@ -33,11 +33,11 @@ procedure Check_Mem is
 
    use Gwiad;
 
-   procedure Run is new AUnit.Test_Runner (Web_Suite);
+   procedure Run is new AUnit.Test_Runner (Web_Suite.Web_Suite_Access);
 
 begin
 
---   Web.Start;
+   Web.Start;
 
    declare
       use Ada.Command_Line;
@@ -48,9 +48,10 @@ begin
       for K in 1 .. Iteration loop
          --  Run tests
          Manager.Discover_Libraries;
+         delay 1.0;
          Run;
          delay 1.0;
-         Manager.Unload_All;
+         Manager.Unload_All (Rename => False);
          delay 1.0;
       end loop;
    end;
