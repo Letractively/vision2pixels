@@ -42,7 +42,7 @@ package V2P.Database is
    procedure Get_Threads
      (Fid        : in String := "";
       User       : in String := "";
-      From       : in Natural := 0;
+      From       : in Positive := 1;
       Filter     : in Filter_Mode := All_Messages;
       Order_Dir  : in Order_Direction := DESC;
       Navigation : out V2P.Context.Post_Ids.Vector;

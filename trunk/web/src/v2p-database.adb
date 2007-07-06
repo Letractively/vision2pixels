@@ -88,7 +88,7 @@ package body V2P.Database is
    function Threads_Ordered_Select
      (Fid        : in String := "";
       User       : in String := "";
-      From       : in Natural := 0;
+      From       : in Positive := 1;
       Filter     : in Filter_Mode := All_Messages;
       Where_Cond : in String := "";
       Order_Dir  : in Order_Direction := DESC;
@@ -688,7 +688,7 @@ package body V2P.Database is
    procedure Get_Threads
      (Fid        : in String := "";
       User       : in String := "";
-      From       : in Natural := 0;
+      From       : in Positive := 1;
       Filter     : in Filter_Mode := All_Messages;
       Order_Dir  : in Order_Direction := DESC;
       Navigation : out Post_Ids.Vector;
@@ -726,7 +726,7 @@ package body V2P.Database is
 
          --  Add next and previous information into the translate set
 
-         if From /= 0 then
+         if From /= 1 then
             Templates.Insert
               (Set, Templates.Assoc
                  (Block_Forum_Navigate.PREVIOUS, From - 50));
@@ -1248,7 +1248,7 @@ package body V2P.Database is
    function Threads_Ordered_Select
      (Fid        : in String  := "";
       User       : in String  := "";
-      From       : in Natural := 0;
+      From       : in Positive := 1;
       Filter     : in Filter_Mode := All_Messages;
       Where_Cond : in String  := "";
       Order_Dir  : in Order_Direction := DESC;
@@ -1315,8 +1315,10 @@ package body V2P.Database is
             Select_Stmt := Select_Stmt & Ordering;
 
             if Limit = 0 then
+               --  SQL offset start to 0 !
+
                Select_Stmt := Select_Stmt
-                 & " limit 50 offset" & Positive'Image (From);
+                 & " limit 50 offset" & Natural'Image (From - 1);
             end if;
 
          when All_Messages =>
