@@ -114,6 +114,8 @@ package body V2P.ECWF_Callbacks is
         (FID        => Context.Get_Value (Template_Defs.Global.FID),
          From       => Navigation_From.Get_Value
            (Context.all, Template_Defs.Global.NAV_FROM),
+         Filter     => Database.Filter_Mode'Value (Context.Get_Value
+           (Template_Defs.Global.FILTER)),
          Order_Dir  => Database.Order_Direction'Value
            (Context.Get_Value (Template_Defs.Global.ORDER_DIR)),
          Navigation => Nav_Links,
