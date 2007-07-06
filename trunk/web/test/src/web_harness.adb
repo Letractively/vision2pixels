@@ -36,7 +36,7 @@ procedure Web_Harness is
    use Gwiad;
    use Gwiad.Dynamic_Libraries.Manager;
 
-   procedure Run is new AUnit.Test_Runner (Web_Suite);
+   procedure Run is new AUnit.Test_Runner (Web_Suite.Web_Suite_Access);
 
 begin
    Text_IO.Put_Line ("(web_harness): Begin");
