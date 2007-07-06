@@ -19,8 +19,6 @@
 --  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.       --
 ------------------------------------------------------------------------------
 
-with Ada.Text_IO;
-
 with AWS.Client;
 with AWS.Response;
 with AWS.Utils;
@@ -183,8 +181,9 @@ package body Web_Tests.Threads_Navigation is
       Client.Get
         (Connection,
          Result,
-         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set &
-           "?sel_filter_forum=TODAY&" & URL_Context);
+         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set
+         & "?" & Block_Forum_Filter.HTTP.Forum_Filter_Set
+         & "=TODAY&" & URL_Context);
 
       Check
         (Response.Message_Body (Result),
@@ -200,8 +199,9 @@ package body Web_Tests.Threads_Navigation is
       Client.Get
         (Connection,
          Result,
-         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set &
-           "?sel_filter_forum=TWO_DAYS&" & URL_Context);
+         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set
+         & "?" & Block_Forum_Filter.HTTP.Forum_Filter_Set
+         & "=TWO_DAYS&" & URL_Context);
 
       Check
         (Response.Message_Body (Result),
@@ -272,8 +272,9 @@ package body Web_Tests.Threads_Navigation is
       Client.Get
         (Connection,
          Result,
-         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set &
-         "?sel_filter_forum=SEVEN_DAYS&" & URL_Context);
+         URI => Block_Forum_Filter.Ajax.Onchange_Forum_Filter_Set
+         & "?" & Block_Forum_Filter.HTTP.Forum_Filter_Set
+         & "=SEVEN_DAYS&" & URL_Context);
 
       Check
         (Response.Message_Body (Result),
@@ -358,8 +359,9 @@ package body Web_Tests.Threads_Navigation is
       Client.Get
         (Connection,
          Result,
-         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set &
-           "?sel_filter_forum=FIFTY_MESSAGES&" & URL_Context);
+         URI => Block_Forum_Filter.Ajax.Onchange_Forum_Filter_Set
+           & "?" & Block_Forum_Filter.HTTP.Forum_Filter_Set
+           & "=FIFTY_MESSAGES&" & URL_Context);
 
       Check
         (Response.Message_Body (Result),
@@ -422,8 +424,9 @@ package body Web_Tests.Threads_Navigation is
       Client.Get
         (Connection,
          Result,
-         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set &
-         "?sel_filter_forum=TODAY&" & URL_Context);
+         URI => Block_Forum_Filter.Ajax.onchange_forum_filter_set
+         & "?" & Block_Forum_Filter.HTTP.Forum_Filter_Set
+         & "=TODAY&" & URL_Context);
 
       Client.Get
         (Connection, Result, URI => "/forum/threads?FID=1&" & URL_Context);
@@ -433,7 +436,7 @@ package body Web_Tests.Threads_Navigation is
          Word_Set'(+"TID=89", +"Invasion", +"Portrait",
            +"TID=88", +"On ne pousse pas", +"Paysage",
            +"TID=87", +"Désséché", +"Abstrait",
-           not "TID=140", +"</ul></div></div>"),
+           not "TID=140"),
          "Filter context not properly restored");
    end List_Forum_Threads;
 
