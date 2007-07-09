@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------------
 
 with Ada.Directories;
+with Ada.Containers.Doubly_Linked_Lists;
 with Ada.Exceptions;
 with Ada.Task_Attributes;
 with Ada.Strings.Unbounded;
@@ -60,11 +61,19 @@ package body V2P.Database is
       Connected : Boolean;
    end record;
 
-   Null_DBH : constant TLS_DBH := TLS_DBH'(Handle => null, Connected => False);
+   type TLS_DBH_Access is access all TLS_DBH;
+
+   Null_DBH : constant TLS_DBH :=
+                TLS_DBH'(Handle => null, Connected => False);
 
    package DBH_TLS is new Task_Attributes (TLS_DBH, Null_DBH);
 
-   procedure Connect (DBH : in out TLS_DBH);
+   package Handle_Lists is new Ada.Containers.Doubly_Linked_Lists
+     (Element_Type => TLS_DBH_Access, "=" => "=");
+
+   Current_Handle_List : Handle_Lists.List := Handle_Lists.Empty_List;
+
+   procedure Connect (DBH : in TLS_DBH_Access);
    --  Connect to the database if needed
 
    function F (F : in Float) return String;
@@ -100,16 +109,52 @@ package body V2P.Database is
    -- Connect --
    -------------
 
-   procedure Connect (DBH : in out TLS_DBH) is
+   procedure Connect (DBH : in TLS_DBH_Access) is
+      DB_Path : constant String :=
+                  Gwiad_Plugin_Path & Directory_Separator
+                    & Settings.Get_DB_Name;
    begin
       if not DBH.Connected then
-         DBH.Handle := new DB.Handle'Class'(DB_Handle.Get);
-         DBH.Handle.Connect (Gwiad_Plugin_Path & Directory_Separator &
-                             Settings.Get_DB_Name);
-         DBH.Connected := True;
-         DBH_TLS.Set_Value (DBH);
+         if Directories.Exists (Name => DB_Path) then
+            DBH.Handle := new DB.Handle'Class'(DB_Handle.Get);
+            DBH.Handle.Connect (DB_Path);
+            DBH.Connected := True;
+            DBH_TLS.Set_Value (DBH.all);
+            Current_Handle_List.Append (DBH);
+         else
+            Ada.Text_IO.Put_Line ("ERROR : No database found !");
+            raise No_Database;
+         end if;
       end if;
    end Connect;
+
+   procedure Disconnect_All is
+      use Handle_Lists;
+      Position : Cursor := First (Current_Handle_List);
+
+      procedure Disconnect (Position : Cursor);
+      --  Disconnect database handle at position
+
+      ----------------
+      -- Disconnect --
+      ----------------
+
+      procedure Disconnect (Position : Cursor) is
+         DBH : constant TLS_DBH_Access := Element (Position);
+      begin
+         DBH.Handle.Close;
+         DBH.Handle := null;
+         DBH.Connected := False;
+      end Disconnect;
+
+   begin
+      while Has_Element (Position) loop
+         Disconnect (Position);
+         Delete (Container => Current_Handle_List, Position => Position);
+         Position := Handle_Lists.First (Current_Handle_List);
+      end loop;
+
+   end Disconnect_All;
 
    -------
    -- F --
@@ -126,7 +171,7 @@ package body V2P.Database is
 
    function Get_Categories (Fid : in String) return Templates.Translate_Set is
       use type Templates.Tag;
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set  : Templates.Translate_Set;
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
@@ -164,7 +209,7 @@ package body V2P.Database is
 
    function Get_Category (Tid : in String) return Templates.Translate_Set is
       use type Templates.Tag;
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set  : Templates.Translate_Set;
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
@@ -201,7 +246,7 @@ package body V2P.Database is
    ----------------------------
 
    function Get_Category_Full_Name (CID : in String) return String is
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
       Name : Unbounded_String;
@@ -233,7 +278,7 @@ package body V2P.Database is
 
    function Get_Comment (Cid : in String) return Templates.Translate_Set is
       use type Templates.Tag;
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set  : Templates.Translate_Set;
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
@@ -295,7 +340,7 @@ package body V2P.Database is
 
    function Get_Entry (Tid : in String) return Templates.Translate_Set is
       use type Templates.Tag;
-      DBH                : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set                : Templates.Translate_Set;
       Iter               : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line               : DB.String_Vectors.Vector;
@@ -417,7 +462,7 @@ package body V2P.Database is
       function "+"
         (Str : in String) return Unbounded_String renames To_Unbounded_String;
 
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
       Set  : Templates.Translate_Set;
@@ -527,7 +572,7 @@ package body V2P.Database is
    ---------------
 
    function Get_Forum (Fid : in String) return String is
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
    begin
@@ -560,7 +605,7 @@ package body V2P.Database is
    function Get_Forums return Templates.Translate_Set is
       use type Templates.Tag;
 
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set  : Templates.Translate_Set;
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
@@ -596,7 +641,7 @@ package body V2P.Database is
    function Get_Metadata (Pid : in String) return Templates.Translate_Set is
       use type Templates.Tag;
 
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
       Set  : Templates.Translate_Set;
@@ -653,7 +698,7 @@ package body V2P.Database is
    function Get_Password (Uid : in String) return String is
       use type Templates.Tag;
 
-      DBH  : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line : DB.String_Vectors.Vector;
    begin
@@ -697,7 +742,7 @@ package body V2P.Database is
       use type Templates.Tag;
       use Post_Ids;
 
-      DBH             : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter            : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line            : DB.String_Vectors.Vector;
       Id              : Templates.Tag;
@@ -781,7 +826,7 @@ package body V2P.Database is
    -------------------
 
    function Get_Thumbnail (Post : in String) return String is
-      DBH      : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter     : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line     : DB.String_Vectors.Vector;
       Filename : Unbounded_String;
@@ -830,7 +875,7 @@ package body V2P.Database is
       SQL          : constant String :=
                        "select content, content_html from user_page "
                          & "where user_login=" & Q (Uid);
-      DBH          : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set          : Templates.Translate_Set;
       Iter         : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line         : DB.String_Vectors.Vector;
@@ -871,7 +916,7 @@ package body V2P.Database is
    is
       use type Templates.Tag;
 
-      DBH          : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Set          : Templates.Translate_Set;
       Iter         : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line         : DB.String_Vectors.Vector;
@@ -920,7 +965,7 @@ package body V2P.Database is
    -----------------------------
 
    procedure Increment_Visit_Counter (Pid : in String) is
-      DBH : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       SQL : constant String :=
               "update post set visit_counter = visit_counter + 1 where "
                 & "id = " & Q (Pid);
@@ -950,8 +995,7 @@ package body V2P.Database is
       procedure Insert_Table_Post_Comment (post_Id, Comment_Id : in String);
       --  Insert row into post_Comment table
 
-      DBH : TLS_DBH := DBH_TLS.Value;
-
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       --------------------------
       -- Insert_Table_Comment --
       --------------------------
@@ -1013,8 +1057,6 @@ package body V2P.Database is
       Geo_Latitude_Formatted  : in String;
       Geo_Longitude_Formatted : in String)
    is
-      DBH : TLS_DBH := DBH_TLS.Value;
-
       SQL : constant String := "insert into photo_metadata (photo_id, "
         & "geo_latitude, geo_longitude, geo_latitude_formatted, "
         & "geo_longitude_formatted) values ("
@@ -1022,6 +1064,8 @@ package body V2P.Database is
         & F (Geo_Latitude) & ", " & F (Geo_Longitude) & ", "
         & Q (Geo_Latitude_Formatted) & ", "
         & Q (Geo_Longitude_Formatted) & ")";
+
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
    begin
       Connect (DBH);
       DBH.Handle.Execute (SQL);
@@ -1052,8 +1096,7 @@ package body V2P.Database is
       procedure Insert_Table_User_Tmp_Photo (Uid, Pid : in String);
       --  Insert row into the user_tmp_photo table
 
-      DBH : TLS_DBH := DBH_TLS.Value;
-
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       ------------------------
       -- Insert_Table_Photo --
       ------------------------
@@ -1120,8 +1163,7 @@ package body V2P.Database is
       procedure Insert_Table_User_Post (Uid, Post_Id : in String);
       --  Insert row into the user_post table
 
-      DBH : TLS_DBH := DBH_TLS.Value;
-
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       ------------------------
       -- Insert_Table_post --
       ------------------------
@@ -1185,7 +1227,7 @@ package body V2P.Database is
    ---------------
 
    function Is_Author (Uid, Pid : in String) return Boolean is
-      DBH    : TLS_DBH := DBH_TLS.Value;
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
       Iter   : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Result : Boolean := False;
    begin
@@ -1339,10 +1381,11 @@ package body V2P.Database is
    procedure Update_Page
      (Uid : in String; Content : in String; Content_HTML : in String)
    is
-      DBH : TLS_DBH := DBH_TLS.Value;
       SQL : constant String :=
               "update user_page set content_html =  " & Q (Content_HTML)
               & ", content=" & Q (Content) & " where user_login=" & Q (Uid);
+
+      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
    begin
       Connect (DBH);
       DBH.Handle.Execute (SQL);
