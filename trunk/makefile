@@ -54,36 +54,36 @@ OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 	LOG="$(LOG)" SOEXT="$(SOEXT)" GNATMAKE="$(GNATMAKE)" \
 	DIFF=$(DIFF)
 
+all: setup-default build-default
+
 # Modules support
 
-MODULES = image db web
+MODULES = lib image db web
 
-MODULES_SETUP = ${MODULES:%=%_setup}
-
-MODULES_BUILD = ${MODULES:%=%_build}
-
-MODULES_CHECK = ${MODULES:%=%_check}
-
-MODULES_RUNTESTS = ${MODULES:%=%_runtests}
-
-MODULES_INSTALL = ${MODULES:%=%_install}
-
-MODULES_CLEAN = ${MODULES:%=%_clean}
+include mk.modules
 
 # Set LD_LIBRARY_PATH or PATH on Windows
 
-export LD_LIBRARY_PATH=$(GWIAD_INSTALL)
+export LD_LIBRARY_PATH:=$(GWIAD_INSTALL)
+export PATH:=$(GWIAD_INSTALL):$(shell pwd)/runtime:$(PATH)
 
 # Targets
 
-all: $(MODULES_SETUP) $(MODULES_BUILD)
+clean: clean-default
 
-setup: $(MODULES_SETUP)
-
-check: $(MODULES_CHECK)
+check: check-default
 	gnat check -dd -Pkernel/kernel -rules -from=v2p.check
 
 init_tests:
+ifeq ($(OS),Windows_NT)
+	-mkdir runtime
+	$(CP) -p db/lib/*$(SOEXT) runtime/
+	$(CP) -p image/lib/*$(SOEXT) runtime/
+	$(CP) -p kernel/lib/*$(SOEXT) runtime/
+	$(CP) -p lib/gnade/lib/*$(SOEXT) runtime/
+	$(CP) -p lib/g2f_io/lib/*$(SOEXT) runtime/
+	$(CP) -p web/lib/*$(SOEXT) runtime/
+endif
 	-rm -f $(LOG)
 
 check_tests:
@@ -96,9 +96,7 @@ check_tests:
 		true; \
 	fi;
 
-runtests: init_tests $(MODULES_RUNTESTS) check_tests
-
-install: $(MODULES_INSTALL)
+runtests: init_tests runtests-default check_tests
 
 install_gwiad_plugin:
 	-$(GWIAD_UNREGISTER_SCRIPT) $(GWIAD_HOST) website \
@@ -127,28 +125,5 @@ install_gwiad_plugin:
 	$(CP) kernel/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 	$(CP) lib/gnade/lib/*$(SOEXT) $(GWIAD_ROOT)/bin
 
-clean: $(MODULES_CLEAN)
-
 check_mem:
 	make check_mem -C web $(OPTIONS)
-
-gcov_analyse:
-	(cd web/obj/; gcov -abfu ../src/*; gcov -abfu ../tsrc/*)
-
-${MODULES_SETUP}:
-	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
-
-${MODULES_BUILD}:
-	${MAKE} -C ${@:%_build=%} $(OPTIONS)
-
-${MODULES_RUNTESTS}:
-	${MAKE} -C ${@:%_runtests=%} runtests $(OPTIONS)
-
-${MODULES_INSTALL}:
-	${MAKE} -C ${@:%_install=%} install $(OPTIONS)
-
-${MODULES_CLEAN}:
-	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
-
-${MODULES_CHECK}:
-	${MAKE} -C ${@:%_check=%} check $(OPTIONS)

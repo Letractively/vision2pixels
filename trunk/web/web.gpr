@@ -53,18 +53,13 @@ project Web is
    for Library_Kind use "dynamic";
    for Library_Auto_Init use "false";
 
-   case Shared.OS is
-      when "Windows_NT" =>
-         --  ??? for linker library ordering
-         for Library_Options use ("-laws", "-laws_win32", "-lws2_32");
-      when others =>
-         case Shared.Build is
-            when "Debug" =>
-               for Library_Options use ("-fprofile-arcs");
-            when "Release" =>
-               null;
-         end case;
+   case Shared.Build is
+      when "Profile" =>
+         for Library_Options use ("-fprofile-arcs");
+      when "Debug" | "Release" =>
+         null;
    end case;
+
    -------------
    -- Builder --
    -------------

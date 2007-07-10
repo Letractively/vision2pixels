@@ -75,6 +75,10 @@ project Web_Test is
             for Default_Switches ("Ada") use
               Linker'Default_Switches ("Ada") & ("-g");
 
+         when "Profile" =>
+            for Default_Switches ("Ada") use
+              Linker'Default_Switches ("Ada") & ("-g", "-lgmem");
+
          when "Release" =>
             null;
       end case;

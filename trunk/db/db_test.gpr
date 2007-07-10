@@ -49,7 +49,7 @@ project DB_Test is
 
       case Shared.OS is
          when "Windows_NT" =>
-	    null;
+            null;
          when others =>
             for Default_Switches ("Ada") use ("-lodbc");
       end case;
@@ -58,6 +58,10 @@ project DB_Test is
          when "Debug" =>
             for Default_Switches ("Ada") use
               Linker'Default_Switches ("Ada") & ("-g");
+
+         when "Profile" =>
+            for Default_Switches ("Ada") use
+              Linker'Default_Switches ("Ada") & ("-g", "-lgmem");
 
          when "Release" =>
             null;
