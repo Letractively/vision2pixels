@@ -1,7 +1,7 @@
 ###########################################################################
 #                              Vision2Pixels
 #
-#                          Copyright (C) 2006-2007
+#                           Copyright (C) 2007
 #                       Pascal Obry - Olivier Ramonat
 #
 #   This library is free software; you can redistribute it and/or modify
@@ -18,30 +18,16 @@
 #   along with this library; if not, write to the Free Software Foundation,
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#  Simple makefile to build Vision2Pixels
 ###########################################################################
 
-# Targets
+MODULES = g2f_io
 
-LOGFILE := ${shell pwd}/test/image_harness.log.${shell date +%Y%m%d-%H%M%S}
+include ../mk.modules
 
-build:
-	gnat make -XPRJ_BUILD=$(MODE) -Pimage_test
+build: build-default
 
-check:
-	gnat check -dd -Pimage -rules -from=../v2p.check
-	gnat check -dd -Pimage_test -rules -from=../v2p.check
+clean: clean-default
 
-setup install:
+setup: setup-default
 
-run_tests:
-	(cd test; ./image_harness > $(LOGFILE))
-	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
-	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
-
-runtests: run_tests
-
-clean:
-	gnat clean -XPRJ_BUILD=$(MODE) -Pimage_test
-	-$(RM) test/*.res test/image_harness.log.*
-	-$(RM) -r images
+runtests: runtests-default

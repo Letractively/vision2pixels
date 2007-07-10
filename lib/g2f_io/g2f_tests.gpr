@@ -40,17 +40,4 @@ project G2F_Tests is
 
    package Ide renames Shared.Ide;
 
-   ------------
-   -- Linker --
-   ------------
-
-   package Linker is
-      case Shared.OS is
-         when "Windows_NT" =>
-            for Default_Switches ("Ada") use ("-lMagick", "-lgdi32");
-         when others =>
-            null;
-      end case;
-   end Linker;
-
 end G2F_Tests;

@@ -29,7 +29,7 @@ project G2F is
 
    for Library_Dir use "lib";
    for Library_Name use "v2p_g2f";
-   for Library_Kind use "static";
+   for Library_Kind use "dynamic";
 
    Common_Options  :=
      ("-Wall");

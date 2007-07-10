@@ -28,7 +28,7 @@ INSTALL_PLUGIN := $(PWD)/web/v2p-testdir/plugins/vision2pixels
 
 LOGFILE := $(INSTALL_MAIN)/web_harness.log.${shell date +%Y%m%d-%H%M%S}
 
-all:
+build:
 	-chmod a+w lib_ali/*
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb
 	gnat make -XPRJ_BUILD=$(MODE) -Pweb_test
@@ -36,7 +36,6 @@ all:
 check:
 	gnat check -dd -Pweb -rules -from=../v2p.check
 	gnat check -dd -Pweb_test -rules -from=../v2p.check
-
 
 setup:
 	-$(MKDIR) gen
@@ -77,8 +76,8 @@ install-dir:
 	-$(MKDIR) $(INSTALL_MAIN)/lib/services
 
 install: install-dir
-	$(RM) $(INSTALL_MAIN)/lib/websites/libvision2pixels$(SOEXT)
-	$(CP) lib/libvision2pixels$(SOEXT) $(INSTALL_MAIN)/lib/websites
+	$(RM) $(INSTALL_MAIN)/lib/websites/*vision2pixels$(SOEXT)
+	$(CP) lib/*vision2pixels$(SOEXT) $(INSTALL_MAIN)/lib/websites
 
 clean:
 	-$(RM) -r gen src/v2p-template_defs*
@@ -102,7 +101,7 @@ run_tests:
 	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
 	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
 
-runtests: setup_tests install_tests #run_tests
+runtests: setup_tests install_tests run_tests
 
 check_mem: setup_tests install_tests
 	$(GNATMAKE) -Pcheck_mem

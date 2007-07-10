@@ -1,7 +1,7 @@
 ###########################################################################
 #                              Vision2Pixels
 #
-#                          Copyright (C) 2006-2007
+#                           Copyright (C) 2007
 #                       Pascal Obry - Olivier Ramonat
 #
 #   This library is free software; you can redistribute it and/or modify
@@ -18,30 +18,48 @@
 #   along with this library; if not, write to the Free Software Foundation,
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#  Simple makefile to build Vision2Pixels
 ###########################################################################
 
-# Targets
+# Must be included when MODULES variable has been set
 
-LOGFILE := ${shell pwd}/test/image_harness.log.${shell date +%Y%m%d-%H%M%S}
+MODULES_SETUP = ${MODULES:%=%_setup}
 
-build:
-	gnat make -XPRJ_BUILD=$(MODE) -Pimage_test
+MODULES_BUILD = ${MODULES:%=%_build}
 
-check:
-	gnat check -dd -Pimage -rules -from=../v2p.check
-	gnat check -dd -Pimage_test -rules -from=../v2p.check
+MODULES_CHECK = ${MODULES:%=%_check}
 
-setup install:
+MODULES_RUNTESTS = ${MODULES:%=%_runtests}
 
-run_tests:
-	(cd test; ./image_harness > $(LOGFILE))
-	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
-	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
+MODULES_INSTALL = ${MODULES:%=%_install}
 
-runtests: run_tests
+MODULES_CLEAN = ${MODULES:%=%_clean}
 
-clean:
-	gnat clean -XPRJ_BUILD=$(MODE) -Pimage_test
-	-$(RM) test/*.res test/image_harness.log.*
-	-$(RM) -r images
+${MODULES_SETUP}:
+	${MAKE} -C ${@:%_setup=%} setup $(OPTIONS)
+
+${MODULES_BUILD}:
+	${MAKE} -C ${@:%_build=%} build $(OPTIONS)
+
+${MODULES_RUNTESTS}:
+	${MAKE} -C ${@:%_runtests=%} runtests $(OPTIONS)
+
+${MODULES_INSTALL}:
+	${MAKE} -C ${@:%_install=%} install $(OPTIONS)
+
+${MODULES_CLEAN}:
+	${MAKE} -C ${@:%_clean=%} clean $(OPTIONS)
+
+${MODULES_CHECK}:
+	${MAKE} -C ${@:%_check=%} check $(OPTIONS)
+
+setup-default: $(MODULES_SETUP)
+
+build-default: $(MODULES_BUILD)
+
+install-default: $(MODULES_INSTALL)
+
+clean-default: $(MODULES_CLEAN)
+
+check-default: $(MODULES_CHECK)
+
+runtests-default: $(MODULES_RUNTESTS)

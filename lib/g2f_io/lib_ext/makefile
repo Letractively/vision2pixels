@@ -1,7 +1,7 @@
 ###########################################################################
 #                              Vision2Pixels
 #
-#                          Copyright (C) 2006-2007
+#                           Copyright (C) 2007
 #                       Pascal Obry - Olivier Ramonat
 #
 #   This library is free software; you can redistribute it and/or modify
@@ -18,30 +18,24 @@
 #   along with this library; if not, write to the Free Software Foundation,
 #   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-#  Simple makefile to build Vision2Pixels
 ###########################################################################
 
-# Targets
+IMPLIB=libmagick.dll.a libjpeg.dll.a
 
-LOGFILE := ${shell pwd}/test/image_harness.log.${shell date +%Y%m%d-%H%M%S}
+ifeq ($(OS), Windows_NT)
+build-import-libs: $(IMPLIB)
+else
+build-import-libs:
+endif
 
-build:
-	gnat make -XPRJ_BUILD=$(MODE) -Pimage_test
-
-check:
-	gnat check -dd -Pimage -rules -from=../v2p.check
-	gnat check -dd -Pimage_test -rules -from=../v2p.check
-
-setup install:
-
-run_tests:
-	(cd test; ./image_harness > $(LOGFILE))
-	-grep "Failed Tests" $(LOGFILE) >> $(LOG)
-	-grep "Unexpected Errors" $(LOGFILE) >> $(LOG)
-
-runtests: run_tests
+build: build-import-libs
 
 clean:
-	gnat clean -XPRJ_BUILD=$(MODE) -Pimage_test
-	-$(RM) test/*.res test/image_harness.log.*
-	-$(RM) -r images
+	$(RM) -f *.a
+
+setup:
+
+runtests:
+
+$(IMPLIB):
+	dlltool --def ${@:%.a=%}.def --output-lib $@
