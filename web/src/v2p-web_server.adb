@@ -1097,15 +1097,16 @@ package body V2P.Web_Server is
    ------------------
 
    function Website_Data (Request : in Status.Data) return Response.Data is
-      URI          : constant String := Status.URI (Request);
-      File         : constant String
-        := Gwiad_Plugin_Path & Directory_Separator & Settings.Website_Data_Path
-          & Directory_Separator
-          & URI (URI'First +
-                   Settings.Website_Data_Prefix'Length + 1 .. URI'Last);
+      URI  : constant String := Status.URI (Request);
+      File : constant String :=
+               Gwiad_Plugin_Path & Directory_Separator &
+                 Settings.Website_Data_Path & Directory_Separator
+                   & URI
+                      (URI'First +
+                         Settings.Website_Data_Prefix'Length + 1 .. URI'Last);
    begin
-      return Response.File (Content_Type  => MIME.Content_Type (File),
-                            Filename      => File);
+      return Response.File
+        (Content_Type => MIME.Content_Type (File), Filename => File);
    end Website_Data;
 
    -------------------
@@ -1131,8 +1132,8 @@ begin  -- V2P.Web_Server : register vision2pixels website
       Action   => Main_Dispatcher);
 
    Gwiad.Plugins.Websites.Registry.Register
-     (Name        => "vision2pixels",
-      Description => "a Web space engine to comment user's photos",
-      Unregister  => Unregister'Access,
-     Library_Path => V2p_Lib_Path);
+     (Name         => "vision2pixels",
+      Description  => "a Web space engine to comment user's photos",
+      Unregister   => Unregister'Access,
+      Library_Path => V2p_Lib_Path);
 end V2P.Web_Server;
