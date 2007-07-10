@@ -92,15 +92,16 @@ package body Image.Data is
       Out_Thumbnail_Filename : in     String := "";
       Out_Max_Dimension      : in     Image_Dimension := Null_Dimension)
    is
-      Thumb           : Image_Ptr;
-      Thumb_Info      : Image_Info_Ptr;
       Thumb_Size      : constant G2F.IO.Image_Size
         := Image_Size'(X => Image_Size_T (Settings.Thumbnail_Maximum_Width),
                        Y => Image_Size_T (Settings.Thumbnail_Maximum_Height));
+      Thumb           : Image_Ptr;
+      Thumb_Info      : Image_Info_Ptr;
    begin
       --  Read image info
 
       G2F.IO.Set_Filename (Img.Info_Ptr, Original_Filename);
+
       Img.Image_Ptr := Read_Image (Img.Info_Ptr);
 
       if Settings.Limit_Image_Size
