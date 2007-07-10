@@ -28,7 +28,6 @@ with G2F;
 with Image.Data;
 with Settings;
 
-
 package body Image_Tests.Thumbnails is
 
    use Ada;
@@ -60,7 +59,6 @@ package body Image_Tests.Thumbnails is
       Test_Image    : Image.Data.Image_Data;
 
    begin
-
       --  Read image info and create thumbnail
 
       Image.Data.Init (Img => Test_Image, Root_Dir => ".", Filename => S_Name);

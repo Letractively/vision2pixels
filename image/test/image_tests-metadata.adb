@@ -46,7 +46,6 @@ package body Image_Tests.Metadata is
       Get_Lat  : Geo_Coordinate;
       Get_Long : Geo_Coordinate;
    begin
-
       --  48.864263, 2.397927
 
       Pos_Lat.Format (Geo_Lat);
@@ -102,8 +101,6 @@ package body Image_Tests.Metadata is
 
       Assert (Image.Metadata.Geographic.Image (Pos_Long) = "W 87° 43' 41",
               "Error with " & Image.Metadata.Geographic.Image (Pos_Long));
-
-
    end Geo_Format;
 
    ----------
