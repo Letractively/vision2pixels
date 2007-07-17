@@ -55,7 +55,7 @@ project GNADE is
    package Compiler is
 
       case Shared.Build is
-         when "Debug" =>
+         when "Debug" | "Profile" =>
             for Default_Switches ("Ada") use Common_Options & Debug_Options;
 
          when "Release" =>
