@@ -20,12 +20,12 @@
 ------------------------------------------------------------------------------
 
 with Ada.Containers.Indefinite_Vectors;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Context;
 
 package V2P.Context is
 
    use Ada;
-   use AWS.Services.ECWF.Context;
+   use AWS.Services.Web_Block.Context;
 
    package Post_Ids is
      new Containers.Indefinite_Vectors (Positive, String);

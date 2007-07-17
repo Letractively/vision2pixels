@@ -25,8 +25,8 @@ with AWS.MIME;
 with AWS.Parameters;
 with AWS.Response;
 with AWS.Services.Dispatchers.URI;
-with AWS.Services.ECWF.Registry;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Registry;
+with AWS.Services.Web_Block.Context;
 with AWS.Session;
 with AWS.Status;
 with AWS.Templates;
@@ -78,7 +78,7 @@ package body V2P.Web_Server is
 
    use Morzhol.OS;
 
-   use AWS.Services.ECWF.Registry;
+   use AWS.Services.Web_Block.Registry;
    use Gwiad.Plugins.Websites;
 
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
@@ -120,82 +120,83 @@ package body V2P.Web_Server is
    --  Thumbs callback
 
    --------------------
-   -- ECWF Callbacks --
+   -- Web_Block Callbacks --
    --------------------
 
    procedure Forum_Entry_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Forum entry callback
 
    procedure Forum_Threads_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Forum threads callback
 
    procedure Login_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Login callback
 
    procedure Logout_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Logout callback
 
    procedure Onchange_Forum_List_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when a new forum is selected on post page
 
    procedure Onchange_Filter_Forum
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when changing the forum sorting
 
    procedure Onsubmit_Comment_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when submitting a new comment
 
    procedure Onsubmit_Metadata_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when submitting new metadata
 
    procedure Onsubmit_Post_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when submitting a new post
 
    procedure Onsubmit_User_Page_Edit_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Called when submitting new user page content
 
    procedure New_Photo_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Adds a new photo in user tmp photo table
 
    procedure Main_Page_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
    --  Display v2p main page
 
-   procedure Context_Filter (Context : access Services.ECWF.Context.Object);
+   procedure Context_Filter
+     (Context : access Services.Web_Block.Context.Object);
    --  Update the context filter
 
    -------------
@@ -219,7 +220,8 @@ package body V2P.Web_Server is
    -- Context_Filter --
    --------------------
 
-   procedure Context_Filter (Context : access Services.ECWF.Context.Object) is
+   procedure Context_Filter
+     (Context : access Services.Web_Block.Context.Object) is
    begin
       if not Context.Exist (Template_Defs.Global.FILTER) then
          Context.Set_Value
@@ -307,12 +309,12 @@ package body V2P.Web_Server is
            (Template_Defs.Global.THUMB_SOURCE_PREFIX,
             Settings.Thumbs_Source_Prefix));
 
-      Web_Page := Services.ECWF.Registry.Build
+      Web_Page := Services.Web_Block.Registry.Build
         (URI, Request, Translations, Cache_Control => Messages.Prevent_Cache);
 
       if Response.Status_Code (Web_Page) = Messages.S404 then
          --  Page not found
-         Web_Page := Services.ECWF.Registry.Build
+         Web_Page := Services.Web_Block.Registry.Build
            (Template_Defs.Error.URL, Request, Translations);
 
       end if;
@@ -338,7 +340,7 @@ package body V2P.Web_Server is
 
    procedure Forum_Entry_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       SID         : constant Session.Id := Status.Session (Request);
@@ -418,7 +420,7 @@ package body V2P.Web_Server is
 
    procedure Forum_Threads_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Translations);
@@ -480,7 +482,7 @@ package body V2P.Web_Server is
 
    procedure Login_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -511,7 +513,7 @@ package body V2P.Web_Server is
 
    procedure Logout_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -537,7 +539,7 @@ package body V2P.Web_Server is
 
    procedure Main_Page_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Request, Translations);
@@ -558,7 +560,7 @@ package body V2P.Web_Server is
 
    procedure New_Photo_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -634,7 +636,7 @@ package body V2P.Web_Server is
 
    procedure Onchange_Filter_Forum
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Translations);
@@ -654,7 +656,7 @@ package body V2P.Web_Server is
 
    procedure Onchange_Forum_List_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -672,7 +674,7 @@ package body V2P.Web_Server is
 
    procedure Onsubmit_Comment_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       use Template_Defs;
@@ -748,7 +750,7 @@ package body V2P.Web_Server is
 
    procedure Onsubmit_Metadata_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Translations);
@@ -806,7 +808,7 @@ package body V2P.Web_Server is
 
    procedure Onsubmit_Post_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       use Template_Defs;
@@ -887,7 +889,7 @@ package body V2P.Web_Server is
 
    procedure Onsubmit_User_Page_Edit_Form_Enter_Callback
      (Request      : in     Status.Data;
-      Context      : access Services.ECWF.Context.Object;
+      Context      : access Services.Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set)
    is
       pragma Unreferenced (Context);
@@ -968,95 +970,95 @@ package body V2P.Web_Server is
       Services.Dispatchers.URI.Register_Default_Callback
         (Main_Dispatcher,
          Dispatchers.Callback.Create (Default_Callback'Access));
-      --  This default callback will handle all ECWF callbacks
+      --  This default callback will handle all Web_Block callbacks
 
-      --  Register ECWF pages
+      --  Register Web_Block pages
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Key          => Template_Defs.User_Page.URL,
          Template     => Template_Defs.User_Page.Template,
          Data_CB      => null,
          Prefix       => True);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_Login.Ajax.onclick_login_form_enter,
          Template_Defs.R_Block_Login.Template,
          Login_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_Login.Ajax.onclick_logout_enter,
          Template_Defs.R_Block_Logout.Template,
          Logout_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_Forum_Filter.Ajax.onchange_forum_filter_set,
          Template_Defs.R_Block_Forum_Filter.Template,
          Onchange_Filter_Forum'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Comment.Ajax.onchange_sel_forum_list,
          Template_Defs.R_Block_Forum_List.Template,
          Onchange_Forum_List_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Comment.Ajax.onsubmit_comment_form,
          Template_Defs.R_Block_Comment_Form_Enter.Template,
          Onsubmit_Comment_Form_Enter_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Post.Ajax.onsubmit_post_form,
          Template_Defs.R_Block_Post_Form_Enter.Template,
          Onsubmit_Post_Form_Enter_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_Metadata.Ajax.onsubmit_metadata_post,
          Template_Defs.R_Block_Metadata_Form_Enter.Template,
          Onsubmit_Metadata_Form_Enter_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_User_Page.Ajax.onsubmit_user_page_edit_form,
          Template_Defs.R_Block_User_Page_Edit_Form_Enter.Template,
          Onsubmit_User_Page_Edit_Form_Enter_Callback'Access,
          MIME.Text_XML);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Forum_Entry.URL,
          Template_Defs.Forum_Entry.Template,
          Forum_Entry_Callback'Access);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Photo.URL,
          Template_Defs.Iframe_Photo_Post.Template,
          New_Photo_Callback'Access);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Forum_Threads.URL,
          Template_Defs.Forum_Threads.Template,
          Forum_Threads_Callback'Access);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Main_Page.URL,
          Template_Defs.Main_Page.Template,
          Main_Page_Callback'Access);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Error.URL,
          Template_Defs.Error.Template,
          null);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (Template_Defs.Forum_Post.URL,
          Template_Defs.Forum_Post.Template,
          null);
 
-      Services.ECWF.Registry.Register
+      Services.Web_Block.Registry.Register
         (XML_Prefix_URI,
          Default_XML_Callback'Access,
          null,

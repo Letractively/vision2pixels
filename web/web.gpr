@@ -25,7 +25,6 @@ with "morzhol";
 with "gwiad-plugins-services";
 with "gwiad-plugins-websites";
 with "gwiad-web";
-with "gwiad-ecwf";
 
 with "wiki_interface";
 
