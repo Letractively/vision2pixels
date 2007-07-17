@@ -132,14 +132,14 @@ package body V2P.Database is
       use Handle_Lists;
       Position : Cursor := First (Current_Handle_List);
 
-      procedure Disconnect (Position : Cursor);
+      procedure Disconnect (Position : in Cursor);
       --  Disconnect database handle at position
 
       ----------------
       -- Disconnect --
       ----------------
 
-      procedure Disconnect (Position : Cursor) is
+      procedure Disconnect (Position : in Cursor) is
          DBH : constant TLS_DBH_Access := Element (Position);
       begin
          DBH.Handle.Close;
