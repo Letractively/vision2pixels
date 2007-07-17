@@ -21,81 +21,81 @@
 
 with AWS.Status;
 with AWS.Templates;
-with AWS.Services.ECWF.Context;
+with AWS.Services.Web_Block.Context;
 
-package V2P.ECWF_Callbacks is
+package V2P.Web_Block_Callbacks is
 
    use AWS;
    use AWS.Services;
 
    procedure Exif
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Forum_Filter
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Forum_List
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Forum_List_Select
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Forum_Threads
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Login
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Metadata
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure New_Comment
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure New_Photo
      (Request      : in Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set) is null;
 
    procedure New_Post
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure Quick_Login
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set) is null;
 
    procedure User_Page
      (Request      : in Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure User_Thread_List
      (Request      : in     Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
    procedure User_Tmp_Photo_Select
      (Request      : in Status.Data;
-      Context      : access ECWF.Context.Object;
+      Context      : access Web_Block.Context.Object;
       Translations : in out Templates.Translate_Set);
 
-end V2P.ECWF_Callbacks;
+end V2P.Web_Block_Callbacks;
