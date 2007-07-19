@@ -56,6 +56,10 @@ OPTIONS = INSTALL="$(INSTALL)" EXEXT="$(EXEXT)" MODE="$(MODE)" \
 
 all: setup-default build-default
 
+setup: setup-default
+
+build: build-default
+
 # Modules support
 
 MODULES = lib image db web
