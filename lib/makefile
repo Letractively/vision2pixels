@@ -30,4 +30,6 @@ clean: clean-default
 
 setup: setup-default
 
+check:
+
 runtests: runtests-default
