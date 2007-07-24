@@ -216,12 +216,11 @@ body.main p#logo {
 @@--  Footpage
 
 #ft {
-   position: absolute;
    bottom: 0 !important;
    bottom: -1px;
    height: 40px;
    text-align:right;
-   margin-right:0.5em;
+   margin:1em 0.5em 0 0;
 }
 
 @@--  Forum list
