@@ -282,6 +282,14 @@ package body V2P.Web_Server is
                String'(Session.Get (SID, Template_Defs.Global.LOGIN))));
       end if;
 
+      --  Adds Version number
+
+      Templates.Insert
+        (Translations,
+         Templates.Assoc
+           (Template_Defs.Global.V2P_VERSION,
+            V2P.Version));
+
       --  Adds some URL
 
       Templates.Insert
