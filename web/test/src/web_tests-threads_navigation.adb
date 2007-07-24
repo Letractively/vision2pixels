@@ -75,7 +75,7 @@ package body Web_Tests.Threads_Navigation is
 
       function URL_Context return String is
       begin
-         return "CTX_ECWF=" & To_String (Context);
+         return "CTX_WB=" & To_String (Context);
       end URL_Context;
 
    begin
@@ -445,7 +445,7 @@ package body Web_Tests.Threads_Navigation is
    ---------------
 
    procedure Main_Page (T : in out AUnit.Test_Cases.Test_Case'Class) is
-      R_Context : constant String := "div id=""CTX_ECWF""[^>]+>([^<]+)";
+      R_Context : constant String := "div id=""CTX_WB""[^>]+>([^<]+)";
       Result    : Response.Data;
    begin
       Client.Create (Connection, "http://" & Host & ':' & Utils.Image (Port));
