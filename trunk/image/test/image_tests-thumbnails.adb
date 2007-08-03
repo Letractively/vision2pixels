@@ -52,11 +52,12 @@ package body Image_Tests.Thumbnails is
                           GNAT.Calendar.Time_IO.Image (Now, "%Y");
       Filename_Prefix : constant String :=
                           GNAT.Calendar.Time_IO.Image (Now, "%Y%m%d%H%M-");
-      Thumb_Name      : constant String :=
-                          Compose
-                            (Compose (Settings.Get_Thumbs_Path, Year),
-                             Filename_Prefix & S_Name);
-      Test_Image    : Image.Data.Image_Data;
+      Thumb_Name      : constant String := Compose
+        (Containing_Directory => Compose
+           (Containing_Directory => Settings.Get_Thumbs_Path,
+            Name                 => Year),
+         Name                 => Filename_Prefix & S_Name);
+      Test_Image      : Image.Data.Image_Data;
 
    begin
       --  Read image info and create thumbnail

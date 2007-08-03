@@ -26,6 +26,8 @@ package V2P is
    Version : constant String := "0.1";
 
    Gwiad_Plugin_Path : constant String :=
-                         Ada.Directories.Compose ("plugins", "vision2pixels");
+                         Ada.Directories.Compose
+                           (Containing_Directory => "plugins",
+                            Name                 => "vision2pixels");
 
 end V2P;

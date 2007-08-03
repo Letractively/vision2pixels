@@ -84,7 +84,9 @@ package body V2P.Web_Server is
    Main_Dispatcher : Services.Dispatchers.URI.Handler;
 
    XML_Path         : constant String :=
-                        Directories.Compose (Gwiad_Plugin_Path, "xml");
+                        Directories.Compose
+                          (Containing_Directory => Gwiad_Plugin_Path,
+                           Name                 => "xml");
    XML_Prefix_URI   : constant String := "/xml_";
    CSS_URI          : constant String := "/css";
    Web_JS_URI       : constant String := "/we_js";
@@ -387,7 +389,7 @@ package body V2P.Web_Server is
 
          --  Insert navigation links (previous and next post)
 
-         declare
+         Insert_Links : declare
             Selected_Post : constant V2P.Context.Post_Ids.Vector :=
                               V2P.Context.Navigation_Links.Get_Value
                                 (Context.all, "Navigation_Links");
@@ -417,7 +419,7 @@ package body V2P.Web_Server is
                     (V2P.Template_Defs.Forum_Entry.NEXT_THUMB,
                      Database.Get_Thumbnail (Next_Id)));
             end if;
-         end;
+         end Insert_Links;
          Templates.Insert (Translations, Database.Get_Entry (TID));
       end if;
    end Forum_Entry_Callback;
@@ -612,7 +614,7 @@ package body V2P.Web_Server is
                Image_Init_Status'Image
                  (Image.Data.Exceed_Max_Size)));
       else
-         declare
+         Insert_Photo : declare
             New_Photo_Filename : constant String
               := New_Image.Filename
                 (Images_Path'Length + 1 .. New_Image.Filename'Last);
@@ -634,7 +636,7 @@ package body V2P.Web_Server is
                Templates.Assoc
                  (Template_Defs.Iframe_Photo_Post.NEW_PHOTO_FILENAME,
                   New_Photo_Filename));
-         end;
+         end Insert_Photo;
       end if;
    end New_Photo_Callback;
 
@@ -722,14 +724,14 @@ package body V2P.Web_Server is
             Templates.Assoc
               (R_Block_Comment_Form_Enter.ERROR_DUPLICATED, "ERROR"));
 
-      elsif Tid /= "" and not Is_Valid_Comment (Comment_Wiki) then
+      elsif Tid /= "" and then not Is_Valid_Comment (Comment_Wiki) then
          Templates.Insert
            (Translations,
             Templates.Assoc
               (R_Block_Comment_Form_Enter.ERROR, "ERROR"));
             --  ??? Adds an error message
       else
-         declare
+         Insert_Comment : declare
             Cid : constant String := Database.Insert_Comment
               (Login, Anonymous, Tid, Name, Comment_Wiki, Pid);
          begin
@@ -748,7 +750,7 @@ package body V2P.Web_Server is
                Templates.Assoc
                  (R_Block_Comment_Form_Enter.COMMENT_LEVEL, "1"));
             --  Does not support threaded view for now
-         end;
+         end Insert_Comment;
       end if;
    end Onsubmit_Comment_Form_Enter_Callback;
 
@@ -855,7 +857,7 @@ package body V2P.Web_Server is
                   "ERROR_DUPLICATE_POST"));
 
          else
-            declare
+            Insert_Post : declare
                Post_Id : constant String :=
                            Database.Insert_Post
                              (Login, CID, Name, Comment_Wiki, Pid);
@@ -881,7 +883,7 @@ package body V2P.Web_Server is
                        (R_Block_Post_Form_Enter.ERROR,
                         "DATABASE INSERT FAILED"));
                end if;
-            end;
+            end Insert_Post;
          end if;
 
          if Pid /= "" and then Context.Exist (Global.TID) then
@@ -992,49 +994,49 @@ package body V2P.Web_Server is
         (Template_Defs.Block_Login.Ajax.onclick_login_form_enter,
          Template_Defs.R_Block_Login.Template,
          Login_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_Login.Ajax.onclick_logout_enter,
          Template_Defs.R_Block_Logout.Template,
          Logout_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_Forum_Filter.Ajax.onchange_forum_filter_set,
          Template_Defs.R_Block_Forum_Filter.Template,
          Onchange_Filter_Forum'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Comment.Ajax.onchange_sel_forum_list,
          Template_Defs.R_Block_Forum_List.Template,
          Onchange_Forum_List_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Comment.Ajax.onsubmit_comment_form,
          Template_Defs.R_Block_Comment_Form_Enter.Template,
          Onsubmit_Comment_Form_Enter_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_New_Post.Ajax.onsubmit_post_form,
          Template_Defs.R_Block_Post_Form_Enter.Template,
          Onsubmit_Post_Form_Enter_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_Metadata.Ajax.onsubmit_metadata_post,
          Template_Defs.R_Block_Metadata_Form_Enter.Template,
          Onsubmit_Metadata_Form_Enter_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Block_User_Page.Ajax.onsubmit_user_page_edit_form,
          Template_Defs.R_Block_User_Page_Edit_Form_Enter.Template,
          Onsubmit_User_Page_Edit_Form_Enter_Callback'Access,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
 
       Services.Web_Block.Registry.Register
         (Template_Defs.Forum_Entry.URL,
@@ -1070,7 +1072,7 @@ package body V2P.Web_Server is
         (XML_Prefix_URI,
          Default_XML_Callback'Access,
          null,
-         MIME.Text_XML);
+         Content_Type => MIME.Text_XML);
       --  All URLs starting with XML_Prefix_URI are handled by a specific
       --  callback returning the corresponding file in the xml directory.
    end Start;

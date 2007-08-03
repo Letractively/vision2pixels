@@ -28,7 +28,8 @@ package V2P.Context is
    use AWS.Services.Web_Block.Context;
 
    package Post_Ids is
-     new Containers.Indefinite_Vectors (Positive, String);
+     new Containers.Indefinite_Vectors
+       (Index_Type => Positive, Element_Type => String);
    --  Post_Ids stores all visible post ids in forum threads page
 
    package Navigation_Links is

@@ -63,11 +63,14 @@ package body DB_Tests.User is
    procedure Simple_User (T : in out AUnit.Test_Cases.Test_Case'Class) is
       pragma Unreferenced (T);
 
-      Expected : constant
-        array (Positive range <>, Positive range <>) of Unbounded_String :=
-                   (1 => (+"enzbang", +"password", +"v2p@ramonat.fr"),
-                    2 => (+"toto", +"pwd", +"toto@here.com"),
-                    3 => (+"turbo", +"turbopass", +"v2p@obry.net"));
+      type User is array (Positive range 1 .. 3) of Unbounded_String;
+      type User_Set is array (Positive range <>) of User;
+
+      Expected : constant User_Set :=
+                   User_Set'
+                     (1 => User'(+"enzbang", +"password", +"v2p@ramonat.fr"),
+                      2 => User'(+"toto", +"pwd", +"toto@here.com"),
+                      3 => User'(+"turbo", +"turbopass", +"v2p@obry.net"));
 
       H        : DB.SQLite.Handle;
       I        : DB.SQLite.Iterator;
@@ -76,27 +79,27 @@ package body DB_Tests.User is
       L        : Positive := 1; -- line and column position to check
       C        : Positive := 1;
 
-      procedure Check (Position : DB.String_Vectors.Cursor);
+      procedure Check (Position : in DB.String_Vectors.Cursor);
       --  Print an item
 
       -----------
       -- Print --
       -----------
 
-      procedure Check (Position : DB.String_Vectors.Cursor) is
+      procedure Check (Position : in DB.String_Vectors.Cursor) is
          Value : constant String := DB.String_Vectors.Element (Position);
       begin
          Assert
-           (Expected (L, C) = +Value,
+           (Expected (L)(C) = +Value,
             L'Img & C'Img & " | " &
-            "Expected " & To_String (Expected (L, C)) & " found " & Value);
+            "Expected " & To_String (Expected (L)(C)) & " found " & Value);
          C := C + 1;
       end Check;
 
    begin
       DB.SQLite.Connect (H, "../data/testing.db");
 
-      begin
+      Insert_User : begin
          DB.SQLite.Execute
            (H, "insert into user values ('toto', 'pwd', 'toto@here.com')");
       exception
@@ -104,7 +107,7 @@ package body DB_Tests.User is
             --  Catch all exceptions, just in case the data have already been
             --  inserted into the database.
             null;
-      end;
+      end Insert_User;
 
       DB.SQLite.Prepare_Select
         (H, I, "select login, password, email from user order by login");

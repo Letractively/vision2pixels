@@ -86,7 +86,7 @@ package body Image.Metadata.Embedded is
       Five_Secs : constant := 5_000;
       File      : aliased String := Filename;
       Pd        : Expect.Process_Descriptor;
-      Matched   : Regpat.Match_Array (0 .. 3);
+      Matched   : Regpat.Match_Array (Regpat.Match_Count range 0 .. 3);
       Result    : Expect.Expect_Match;
       Metadata  : Data;
 
@@ -101,7 +101,7 @@ package body Image.Metadata.Embedded is
       end First;
 
    begin
-      begin
+      Launch_External : begin
          if Is_Windows then
             Expect.Non_Blocking_Spawn
               (Pd, Cmd,
@@ -120,15 +120,16 @@ package body Image.Metadata.Embedded is
          when Expect.Invalid_Process =>
             --  Exiftool not installed, ignore
             return Metadata;
-      end;
+      end Launch_External;
 
       Read_Metadata : loop
-         begin
-            Expect.Expect (Pd, Result, Regpat_Array, Matched, Five_Secs);
+         Read_Out : begin
+            Expect.Expect
+              (Pd, Result, Regpat_Array, Matched, Timeout => Five_Secs);
          exception
             when Expect.Process_Died =>
                exit Read_Metadata;
-         end;
+         end Read_Out;
 
          case Result is
             when  1 => Metadata.Make := First;

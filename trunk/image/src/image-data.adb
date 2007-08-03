@@ -107,7 +107,7 @@ package body Image.Data is
       if Settings.Limit_Image_Size
         or else Out_Max_Dimension /= Null_Dimension
       then
-         declare
+         Check_Size : declare
             Dim : constant Image_Size := Get_Image_Size (Img.Image_Ptr);
          begin
             Img.Dimension := Image_Dimension'
@@ -127,7 +127,7 @@ package body Image.Data is
                Img.Init_Status := Image.Data.Exceed_Max_Size;
                return;
             end if;
-         end;
+         end Check_Size;
       end if;
 
       --  If Out_Filename is null, keep the current image
@@ -146,12 +146,14 @@ package body Image.Data is
 
       if Out_Thumbnail_Filename = "" then
          --  Create thumbnail with original_filename name in thumb directory
-         declare
+         Thumb_Name : declare
             Thumbnail_Filename : constant String := Compose
-                (Settings.Get_Thumbs_Path, Simple_Name (Original_Filename));
+              (Containing_Directory => Settings.Get_Thumbs_Path,
+               Name                 => Simple_Name (Original_Filename));
          begin
             Set_Filename (Thumb, Thumbnail_Filename);
-         end;
+         end Thumb_Name;
+
       else
          Set_Filename (Thumb, Out_Thumbnail_Filename);
       end if;
@@ -184,18 +186,18 @@ package body Image.Data is
       Filename_Prefix : constant String :=
                           GNAT.Calendar.Time_IO.Image (Now, "%Y%m%d%H%M-");
       S_Name          : constant String := Simple_Name (Filename);
-      Thumb_Name      : constant String :=
-                          Compose
-                            (Compose
-                               (Root_Dir & Morzhol.OS.Directory_Separator &
-                                Settings.Get_Thumbs_Path, Year),
-                             Filename_Prefix & S_Name);
-      Image_Name      : constant String :=
-                          Compose
-                            (Compose
-                               (Root_Dir & Morzhol.OS.Directory_Separator &
-                                Settings.Get_Images_Path, Year),
-                             Filename_Prefix & S_Name);
+      Thumb_Name      : constant String := Compose
+        (Containing_Directory => Compose
+           (Containing_Directory => Root_Dir & Morzhol.OS.Directory_Separator
+                                      & Settings.Get_Thumbs_Path,
+            Name                 => Year),
+         Name                 => Filename_Prefix & S_Name);
+      Image_Name      : constant String := Compose
+        (Containing_Directory => Compose
+           (Containing_Directory => Root_Dir & Morzhol.OS.Directory_Separator
+                                      & Settings.Get_Images_Path,
+            Name                 => Year),
+         Name                 => Filename_Prefix & S_Name);
    begin
       if not Exists (Containing_Directory (Thumb_Name)) then
          Create_Path (Containing_Directory (Thumb_Name));
@@ -205,7 +207,11 @@ package body Image.Data is
          Create_Path (Containing_Directory (Image_Name));
       end if;
 
-      Init (Img, Filename, Image_Name, Thumb_Name);
+      Init
+        (Img,
+         Original_Filename      => Filename,
+         Out_Filename           => Image_Name,
+         Out_Thumbnail_Filename => Thumb_Name);
    end Init;
 
    -----------------

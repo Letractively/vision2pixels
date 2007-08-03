@@ -25,7 +25,7 @@ with DB_Suite;
 
 procedure DB_Harness is
 
-   procedure Run is new AUnit.Test_Runner (DB_Suite);
+   procedure Run is new AUnit.Test_Runner (Suite => DB_Suite);
 
 begin
    Run;

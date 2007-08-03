@@ -41,9 +41,9 @@ package body Settings is
       Thumbnail_Maximum_Height, Virtual_Host, Website_Data_Path,
       Website_Data_Prefix, Wiki_Service_Name);
 
-   package Conf is new Morzhol.Iniparser (Attributes);
+   package Conf is new Morzhol.Iniparser (Parameter_Name => Attributes);
 
-   package DB_Conf is new Conf.Enum_Values (DB_Kind);
+   package DB_Conf is new Conf.Enum_Values (Enum => DB_Kind);
 
    -----------------------
    -- Anonymous_Comment --

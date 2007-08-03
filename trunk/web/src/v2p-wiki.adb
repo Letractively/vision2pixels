@@ -47,14 +47,11 @@ package body V2P.Wiki is
    -- Get --
    ---------
 
-   function Get return Wiki_Interface.GW_Service'Class
-   is
+   function Get return Wiki_Interface.GW_Service'Class is
       use Wiki_Interface;
-
    begin
-
       if not Has_Service then
-         declare
+         Initialize_Wiki : declare
             Wiki_World_Service_Access : constant not null GW_Service_Access
               := GW_Service_Access (Get (Wiki_Service_Name));
             Get_Service               : constant GW_Service'Class :=
@@ -73,20 +70,22 @@ package body V2P.Wiki is
 
             Has_Service := True;
             return Get_Service;
-         end;
+         end Initialize_Wiki;
+
       else
-         declare
+         Return_Service : declare
             Wiki_World_Service_Access : constant not null GW_Service_Access :=
                                           GW_Service_Access (Get (Wiki_Id));
             Get_Service               : constant GW_Service'Class :=
                                           Wiki_World_Service_Access.all;
          begin
             return Get_Service;
-         end;
+         end Return_Service;
       end if;
+
    exception
-      when E : others => Text_IO.Put_Line
-           (Exceptions.Exception_Information (E));
+      when E : others =>
+         Text_IO.Put_Line (Exceptions.Exception_Information (E));
          raise;
    end Get;
 
@@ -105,16 +104,15 @@ package body V2P.Wiki is
 
    function Wiki_To_HTML (S : in String) return String is
    begin
-
       if not Exists (Wiki_Service_Name) then
          return "";
       end if;
 
-      declare
+      Render : declare
          Get_Service : constant Wiki_Interface.GW_Service'Class := Get;
       begin
          return Wiki_Interface.HTML_Preview (Get_Service, S);
-      end;
+      end Render;
    end Wiki_To_HTML;
 
 

@@ -120,34 +120,34 @@ package body Web_Tests is
       Status : Boolean := True;
       P      : Natural := 1;
       Len, I : Natural;
+
    begin
       --  First apply all the encoding rules to the Web page
 
-      for K in Coding_Rules'Range loop
-         declare
+      Handle_Rules : for K in Coding_Rules'Range loop
+         Rule : declare
             From : constant String := -Coding_Rules (K).From;
          begin
-            loop
+            Apply_Rule : loop
                I := Index (E_Page, From);
 
-               exit when I = 0;
+               exit Apply_Rule when I = 0;
 
                Replace_Slice
                  (E_Page, I, I + From'Length - 1, -Coding_Rules (K).To);
-            end loop;
-         end;
-      end loop;
+            end loop Apply_Rule;
+         end Rule;
+      end loop Handle_Rules;
 
       --  Check the page now
 
       Len := Length (E_Page);
 
-      Check_Status_Page :
-      for K in Word'Range loop
-         declare
+      Check_Status_Page : for K in Word'Range loop
+         Check_Word : declare
             use Ada.Strings.Fixed;
+            W   : constant String := Get (Word, K);
             Tmp : Natural;
-            W : constant String := Get (Word, K);
          begin
             Tmp := Index (Slice (E_Page, P, Len), W);
 
@@ -155,21 +155,21 @@ package body Web_Tests is
                if Tmp /= 0 then
                   I := K;
                   Status := False;
-                  exit;
+                  exit Check_Status_Page;
                end if;
 
             else
                if Tmp = 0 then
                   I := K;
                   Status := False;
-                  exit;
+                  exit Check_Status_Page;
                else
                   P := Tmp + W'Length;
                end if;
             end if;
-         end;
+         end Check_Word;
 
-         exit when P > Len;
+         exit Check_Status_Page when P > Len;
       end loop Check_Status_Page;
 
       if not Status then
@@ -186,7 +186,7 @@ package body Web_Tests is
    is
       use GNAT.Regpat;
       R_Context : constant Pattern_Matcher := Compile (Regpat);
-      Matches   : Match_Array (0 .. 10);
+      Matches   : Match_Array (Match_Count range 0 .. 10);
    begin
       Match (R_Context, Page, Matches);
 
@@ -198,41 +198,42 @@ package body Web_Tests is
 
 begin --  Web_Tests : Initialization
    Coding_Rules :=
-     Coding_Array'((+"&eacute;", +"é"),
-      (+"&egrave;", +"è"),
-      (+"&ecirc;", +"ê"),
-      (+"&euml;", +"ë"),
+     Coding_Array'(Coding'(+"&eacute;", +"é"),
+      Coding'(+"&egrave;", +"è"),
+      Coding'(+"&ecirc;", +"ê"),
+      Coding'(+"&euml;", +"ë"),
 
-      (+"&aacute;", +"&#225;"),
-      (+"&agrave;", +"à"),
-      (+"&acirc;", +"â"),
-      (+"&atilde;", +"&#227;"),
-      (+"&auml;", +"ä"),
+      Coding'(+"&aacute;", +"&#225;"),
+      Coding'(+"&agrave;", +"à"),
+      Coding'(+"&acirc;", +"â"),
+      Coding'(+"&atilde;", +"&#227;"),
+      Coding'(+"&auml;", +"ä"),
 
-      (+"&iacute;", +"&#237;"),
-      (+"&igrave;", +"&#236;"),
-      (+"&icirc;", +"î"),
-      (+"&iuml;", +"ï"),
+      Coding'(+"&iacute;", +"&#237;"),
+      Coding'(+"&igrave;", +"&#236;"),
+      Coding'(+"&icirc;", +"î"),
+      Coding'(+"&iuml;", +"ï"),
 
-      (+"&oacute;", +"&#243;"),
-      (+"&ograve;", +"&#242;"),
-      (+"&ocirc;", +"ô"),
-      (+"&otilde;", +"&#245;"),
-      (+"&ouml;", +"ö"),
+      Coding'(+"&oacute;", +"&#243;"),
+      Coding'(+"&ograve;", +"&#242;"),
+      Coding'(+"&ocirc;", +"ô"),
+      Coding'(+"&otilde;", +"&#245;"),
+      Coding'(+"&ouml;", +"ö"),
 
-      (+"&uacute;", +"&#250;"),
-      (+"&ugrave;", +"ù"),
-      (+"&ucirc;", +"û"),
-      (+"&uuml;", +"ü"),
+      Coding'(+"&uacute;", +"&#250;"),
+      Coding'(+"&ugrave;", +"ù"),
+      Coding'(+"&ucirc;", +"û"),
+      Coding'(+"&uuml;", +"ü"),
 
-      (+"&ccedil;", +"ç"),
-      (+"&ntilde;", +"&#241;"),
-      (+"&aelig;", +"&#230;"),
-      (+"&lt;", +"<"),
-      (+"&gt;", +">"),
-      (+"&amp;", +"&"),
-      (+"&apos;", +"'"),
-      (+"&quot;", +""""));
+      Coding'(+"&ccedil;", +"ç"),
+      Coding'(+"&ntilde;", +"&#241;"),
+      Coding'(+"&aelig;", +"&#230;"),
+      Coding'(+"&lt;", +"<"),
+      Coding'(+"&gt;", +">"),
+      Coding'(+"&amp;", +"&"),
+      Coding'(+"&apos;", +"'"),
+      Coding'(+"&quot;", +""""));
 
-   Text_IO.Create (Log_File, Text_IO.Out_File, "web_tests.log");
+   Text_IO.Create
+     (Log_File, Mode => Text_IO.Out_File, Name => "web_tests.log");
 end Web_Tests;
