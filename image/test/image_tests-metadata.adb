@@ -51,7 +51,7 @@ package body Image_Tests.Metadata is
       Pos_Lat.Format (Geo_Lat);
       Pos_Long.Format (Geo_Long);
 
-      Assert (Pos_Lat = (48, 51, 51, N),
+      Assert (Pos_Lat = Latitude'(48, 51, 51, N),
               "Error in latitude format for (48, 51, 51, N)");
 
       Get_Lat := To_Geo_Coordinate (Pos_Lat);
@@ -59,7 +59,7 @@ package body Image_Tests.Metadata is
       Assert (Get_Lat = Geo_Lat,
               "To_Geo_Coordinate error for 48° 51' 51'' N");
 
-      Assert (Pos_Long = (2, 23, 53, E),
+      Assert (Pos_Long = Longitude'(2, 23, 53, E),
               "Error in longitude format (2, 23, 53, E)");
 
       Get_Long := To_Geo_Coordinate (Pos_Long);
@@ -81,10 +81,10 @@ package body Image_Tests.Metadata is
       Pos_Lat.Format (Geo_Lat);
       Pos_Long.Format (Geo_Long);
 
-      Assert (Pos_Lat = (40, 26, 46, S),
+      Assert (Pos_Lat = Latitude'(40, 26, 46, S),
               "Error in latitude format for (40, 26, 46, S)");
 
-      Assert (Pos_Long = (87, 43, 41, W),
+      Assert (Pos_Long = Longitude'(87, 43, 41, W),
               "Error in longitude format for (87, 43, 41, W)");
 
       Get_Lat  := To_Geo_Coordinate (Pos_Lat);

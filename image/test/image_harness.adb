@@ -28,7 +28,7 @@ procedure Image_Harness is
 
    use Ada;
 
-   procedure Run is new AUnit.Test_Runner (Image_Suite);
+   procedure Run is new AUnit.Test_Runner (Suite => Image_Suite);
 
 begin
    Run;

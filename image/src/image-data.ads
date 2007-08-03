@@ -55,10 +55,10 @@ package Image.Data is
 
    procedure Init
      (Img                    : in out Image_Data;
-      Original_Filename      : in String;
-      Out_Filename           : in String := "";
-      Out_Thumbnail_Filename : in String := "";
-      Out_Max_Dimension      : in Image_Dimension := Null_Dimension);
+      Original_Filename      : in     String;
+      Out_Filename           : in     String := "";
+      Out_Thumbnail_Filename : in     String := "";
+      Out_Max_Dimension      : in     Image_Dimension := Null_Dimension);
    --  Set image filename, read image info and create thumbnail
 
    function Filename (Img : in Image_Data) return String;

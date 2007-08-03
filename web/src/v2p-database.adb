@@ -66,7 +66,8 @@ package body V2P.Database is
    Null_DBH : constant TLS_DBH :=
                 TLS_DBH'(Handle => null, Connected => False);
 
-   package DBH_TLS is new Task_Attributes (TLS_DBH, Null_DBH);
+   package DBH_TLS is
+     new Task_Attributes (Attribute => TLS_DBH, Initial_Value => Null_DBH);
 
    package Handle_Lists is new Ada.Containers.Doubly_Linked_Lists
      (Element_Type => TLS_DBH_Access, "=" => "=");
@@ -262,8 +263,8 @@ package body V2P.Database is
 
          Name := To_Unbounded_String
            (Directories.Compose
-              (DB.String_Vectors.Element (Line, 1),
-               DB.String_Vectors.Element (Line, 2)));
+              (Containing_Directory => DB.String_Vectors.Element (Line, 1),
+               Name                 => DB.String_Vectors.Element (Line, 2)));
          Line.Clear;
       end if;
 
@@ -584,13 +585,13 @@ package body V2P.Database is
       if Iter.More then
          Iter.Get_Line (Line);
 
-         declare
+         Forum_Name : declare
             Name : constant String := DB.String_Vectors.Element (Line, 1);
          begin
             Line.Clear;
             Iter.End_Select;
             return Name;
-         end;
+         end Forum_Name;
 
       else
          Iter.End_Select;
@@ -714,12 +715,12 @@ package body V2P.Database is
       if Iter.More then
          Iter.Get_Line (Line);
 
-         declare
+         Password_Value : declare
             Password : constant String := DB.String_Vectors.Element (Line, 1);
          begin
             Line.Clear;
             return Password;
-         end;
+         end Password_Value;
 
       else
          return "";
@@ -742,7 +743,8 @@ package body V2P.Database is
       use type Templates.Tag;
       use Post_Ids;
 
-      DBH  : constant TLS_DBH_Access := TLS_DBH_Access (DBH_TLS.Reference);
+      DBH             : constant TLS_DBH_Access :=
+                          TLS_DBH_Access (DBH_TLS.Reference);
       Iter            : DB.Iterator'Class := DB_Handle.Get_Iterator;
       Line            : DB.String_Vectors.Vector;
       Id              : Templates.Tag;
@@ -754,8 +756,8 @@ package body V2P.Database is
       Select_Stmt     : Unbounded_String;
 
    begin
-
       Navigation := Post_Ids.Empty_Vector;
+      Set        := Templates.Null_Set;
 
       Connect (DBH);
 
@@ -1032,13 +1034,13 @@ package body V2P.Database is
       DBH.Handle.Begin_Transaction;
       Insert_Table_Comment (Uid, Anonymous, Comment);
 
-      declare
+      Row_Id : declare
          Cid : constant String := DBH.Handle.Last_Insert_Rowid;
       begin
          Insert_Table_Post_Comment (Thread, Cid);
          DBH.Handle.Commit;
          return Cid;
-      end;
+      end Row_Id;
    exception
       when E : DB.DB_Error =>
          DBH.Handle.Rollback;
@@ -1132,13 +1134,13 @@ package body V2P.Database is
 
       --  ??? A limit should be added for user temporaries photos
 
-      declare
+      Row_Id : declare
          Pid : constant String := DBH.Handle.Last_Insert_Rowid;
       begin
          Insert_Table_User_Tmp_Photo (Uid, Pid);
          DBH.Handle.Commit;
          return Pid;
-      end;
+      end Row_Id;
    exception
       when others =>
          DBH.Handle.Rollback;
@@ -1203,13 +1205,13 @@ package body V2P.Database is
          Insert_Table_Post (Name, Category_Id, Comment, "NULL");
       end if;
 
-      declare
+      Row_Id : declare
          Post_Id : constant String := DBH.Handle.Last_Insert_Rowid;
       begin
          Insert_Table_User_Post (Uid, Post_Id);
          DBH.Handle.Commit;
          return Post_Id (Post_Id'First + 1 .. Post_Id'Last);
-      end;
+      end Row_Id;
 
    exception
       when E : DB.DB_Error =>

@@ -452,7 +452,7 @@ package body Web_Tests.Threads_Navigation is
 
       Client.Get (Connection, Result, URI => "/");
 
-      declare
+      Check_Page : declare
          use AUnit.Assertions;
          Page : constant String := Response.Message_Body (Result);
       begin
@@ -464,7 +464,7 @@ package body Web_Tests.Threads_Navigation is
          Context := +Get (Page, R_Context, 1);
 
          Assert (Context /= Null_Unbounded_String, "No context found!");
-      end;
+      end Check_Page;
    end Main_Page;
 
    ----------
