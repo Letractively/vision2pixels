@@ -46,13 +46,13 @@ package V2P.Database is
    --  Returns the DB line for the given forum
 
    procedure Get_Threads
-     (Fid        : in String := "";
-      User       : in String := "";
-      From       : in Positive := 1;
-      Filter     : in Filter_Mode := All_Messages;
-      Order_Dir  : in Order_Direction := DESC;
-      Navigation : out V2P.Context.Post_Ids.Vector;
-      Set        : out Templates.Translate_Set);
+     (Fid        : in     String := "";
+      User       : in     String := "";
+      From       : in     Positive := 1;
+      Filter     : in     Filter_Mode := All_Messages;
+      Order_Dir  : in     Order_Direction := DESC;
+      Navigation :    out V2P.Context.Post_Ids.Vector;
+      Set        :    out Templates.Translate_Set);
    --  Returns all threads for a given forum
    --  Returns navigation links to store in context
 
@@ -100,15 +100,15 @@ package V2P.Database is
       Name      : in String;
       Comment   : in String;
       Pid       : in String) return String;
-   --  Insert comment Name/Comment into the given forum and thread
-   --  Returns Comment Id
+   --  Insert comment Name/Comment into the given forum and thread,
+   --  Returns Comment Id.
 
    function Insert_Photo
-     (Uid         : in String;
-      Filename    : in String;
-      Height      : in Integer;
-      Width       : in Integer;
-      Size        : in Integer) return String;
+     (Uid      : in String;
+      Filename : in String;
+      Height   : in Integer;
+      Width    : in Integer;
+      Size     : in Integer) return String;
    --  Insert a new photo into the database
    --  Returns photo id
 
@@ -126,8 +126,7 @@ package V2P.Database is
       Name        : in String;
       Comment     : in String;
       Pid         : in String) return String;
-   --  Insert a new post into the database
-   --  Returns post id
+   --  Insert a new post into the database and  returns post id
 
    procedure Increment_Visit_Counter (Pid : in String);
    --  Increment a thread visit counter
