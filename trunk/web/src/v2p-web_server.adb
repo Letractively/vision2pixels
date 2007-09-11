@@ -92,7 +92,7 @@ package body V2P.Web_Server is
    Web_JS_URI       : constant String := "/we_js";
 
    V2p_Lib_Path     : constant String :=
-                        Gwiad.Plugins.Websites.Registry.Library_Path;
+                        Gwiad.Plugins.Get_Last_Library_Path;
 
    -------------------------
    --  Standard Callbacks --
