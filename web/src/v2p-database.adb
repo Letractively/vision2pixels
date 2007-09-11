@@ -102,8 +102,7 @@ package body V2P.Database is
       Filter     : in Filter_Mode := All_Messages;
       Where_Cond : in String := "";
       Order_Dir  : in Order_Direction := DESC;
-      Limit      : in Natural := 0)
-      return Unbounded_String;
+      Limit      : in Natural := 0) return Unbounded_String;
    --  Returns the select SQL query for listing threads with Filter
 
    -------------
@@ -123,7 +122,8 @@ package body V2P.Database is
             DBH_TLS.Set_Value (DBH.all);
             Current_Handle_List.Append (DBH);
          else
-            Ada.Text_IO.Put_Line ("ERROR : No database found !");
+            Ada.Text_IO.Put_Line
+              ("ERROR : No database found : " & DB_Path);
             raise No_Database;
          end if;
       end if;
@@ -732,13 +732,13 @@ package body V2P.Database is
    -----------------
 
    procedure Get_Threads
-     (Fid        : in String := "";
-      User       : in String := "";
-      From       : in Positive := 1;
-      Filter     : in Filter_Mode := All_Messages;
-      Order_Dir  : in Order_Direction := DESC;
-      Navigation : out Post_Ids.Vector;
-      Set        : out Templates.Translate_Set)
+     (Fid        : in     String := "";
+      User       : in     String := "";
+      From       : in     Positive := 1;
+      Filter     : in     Filter_Mode := All_Messages;
+      Order_Dir  : in     Order_Direction := DESC;
+      Navigation :    out Post_Ids.Vector;
+      Set        :    out Templates.Translate_Set)
    is
       use type Templates.Tag;
       use Post_Ids;
@@ -757,7 +757,6 @@ package body V2P.Database is
 
    begin
       Navigation := Post_Ids.Empty_Vector;
-      Set        := Templates.Null_Set;
 
       Connect (DBH);
 
