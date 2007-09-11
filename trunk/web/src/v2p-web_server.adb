@@ -326,7 +326,6 @@ package body V2P.Web_Server is
          --  Page not found
          Web_Page := Services.Web_Block.Registry.Build
            (Template_Defs.Error.URL, Request, Translations);
-
       end if;
 
       return Web_Page;
@@ -613,18 +612,17 @@ package body V2P.Web_Server is
               (Template_Defs.Main_Page.EXCEED_MAXIMUM_SIZE,
                Image_Init_Status'Image
                  (Image.Data.Exceed_Max_Size)));
+
       else
          Insert_Photo : declare
-            New_Photo_Filename : constant String
-              := New_Image.Filename
-                (Images_Path'Length + 1 .. New_Image.Filename'Last);
-            Pid                : constant String
-              := Database.Insert_Photo
-                (Login,
-                 New_Photo_Filename,
-                 Natural (New_Image.Dimension.Width),
-                 Natural (New_Image.Dimension.Height),
-                 Natural (New_Image.Dimension.Size));
+            New_Photo_Filename : constant String := New_Image.Filename
+              (Images_Path'Length + 1 .. New_Image.Filename'Last);
+            Pid                : constant String := Database.Insert_Photo
+              (Login,
+               New_Photo_Filename,
+               Natural (New_Image.Dimension.Width),
+               Natural (New_Image.Dimension.Height),
+               Natural (New_Image.Dimension.Size));
          begin
             Templates.Insert
               (Translations,
@@ -912,11 +910,12 @@ package body V2P.Web_Server is
       Content      : constant String :=
                        Parameters.Get (P, Block_User_Page.HTTP.CONTENT);
       Content_HTML : constant String := V2P.Wiki.Wiki_To_HTML (Content);
-   begin
 
-      Database.Update_Page (Uid          => Login,
-                            Content      => Content,
-                            Content_HTML => Content_HTML);
+   begin
+      Database.Update_Page
+        (Uid          => Login,
+         Content      => Content,
+         Content_HTML => Content_HTML);
 
       Templates.Insert
         (Translations,
