@@ -56,7 +56,7 @@ begin
    --  Exit now
 
    Web.Stop;
-   Manager.Unload_All;
+   Manager.Unregister_All;
 
    Text_IO.Put_Line ("(web_harness): End");
 end Web_Harness;
