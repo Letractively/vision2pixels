@@ -23,7 +23,6 @@ with AWS.Session;
 
 with V2P.Database;
 with V2P.Context;
-with V2P.Template_Defs.Block_Forum_Filter;
 with V2P.Template_Defs.Block_New_Comment;
 with V2P.Template_Defs.User_Page;
 with V2P.Template_Defs.Block_User_Page;
@@ -63,7 +62,7 @@ package body V2P.Web_Block_Callbacks is
       Templates.Insert
         (Translations,
          Templates.Assoc
-           (Template_Defs.Block_Forum_Filter.HTTP.forum_filter_set,
+           (Template_Defs.Global.FILTER,
             Context.Get_Value (Template_Defs.Global.FILTER)));
    end Forum_Filter;
 
@@ -155,7 +154,6 @@ package body V2P.Web_Block_Callbacks is
       pragma Unreferenced (Request);
    begin
       if Context.Exist ("TID") then
-
          if Context.Exist
            (V2P.Template_Defs.Global.ERROR_METADATA_NULL_METADATA) then
             Templates.Insert
@@ -165,6 +163,7 @@ package body V2P.Web_Block_Callbacks is
                   "ERROR"));
             Context.Remove
               (V2P.Template_Defs.Global.ERROR_METADATA_NULL_METADATA);
+
          elsif Context.Exist
            (V2P.Template_Defs.Global.ERROR_METADATA_UNKNOWN_PHOTO) then
             Templates.Insert
@@ -174,6 +173,7 @@ package body V2P.Web_Block_Callbacks is
                   "ERROR"));
             Context.Remove
               (V2P.Template_Defs.Global.ERROR_METADATA_UNKNOWN_PHOTO);
+
          else
             Templates.Insert
               (Translations,
@@ -239,15 +239,12 @@ package body V2P.Web_Block_Callbacks is
                     URI (URI'First
                          + Template_Defs.User_Page.URL'Length .. URI'Last);
    begin
-
-      Templates.Insert (Translations,
-                        Database.Get_User_Page (Uid => User_Name));
+      Templates.Insert
+        (Translations, Database.Get_User_Page (Uid => User_Name));
 
       Templates.Insert
         (Translations,
-         Templates.Assoc
-           (Template_Defs.Block_User_Page.USER_NAME, User_Name));
-
+         Templates.Assoc (Template_Defs.Block_User_Page.USER_NAME, User_Name));
    end User_Page;
 
    ----------------------
@@ -264,9 +261,10 @@ package body V2P.Web_Block_Callbacks is
       Set        : Templates.Translate_Set;
       Navigation : V2P.Context.Post_Ids.Vector;
    begin
-      Database.Get_Threads (User       => Session.Get (SID, "LOGIN"),
-                            Navigation => Navigation,
-                            Set        => Set);
+      Database.Get_Threads
+        (User       => Session.Get (SID, "LOGIN"),
+         Navigation => Navigation,
+         Set        => Set);
 
       Templates.Insert (Translations, Set);
    end User_Thread_List;
